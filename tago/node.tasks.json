@@ -1,0 +1,2570 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "template_type": "project_task_template",
+  "version": "3.3",
+  "description": "Hexagonal DDD atomic-unit project template. The task graph and the path graph are two views of the same architecture. Task dependency edges follow the same directional rules as the hexagonal rings. Each task delivers one atomic unit folder. Use this template to plan your own system or adapt it for any project. Adapted for a Python package: an atomic unit is one module (implementation) plus the tests that pin its contract; schema contracts are pydantic models.",
+  "enums": {
+    "status": [
+      "Not Started",
+      "In Progress",
+      "Blocked",
+      "In Review",
+      "Done",
+      "Cancelled"
+    ],
+    "project_status": [
+      "Not Started",
+      "Planning",
+      "In Progress",
+      "On Hold",
+      "Completed",
+      "Cancelled"
+    ],
+    "priority": [
+      "Critical",
+      "High",
+      "Medium",
+      "Low"
+    ],
+    "complexity": [
+      "Very Low",
+      "Low",
+      "Medium",
+      "High",
+      "Very High"
+    ],
+    "dependency_type": [
+      "FS",
+      "SS",
+      "FF",
+      "SF"
+    ],
+    "risk_probability": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "risk_impact": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_score": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_status": [
+      "Open",
+      "Mitigated",
+      "Closed"
+    ],
+    "change_status": [
+      "Pending",
+      "Approved",
+      "Rejected"
+    ],
+    "milestone_status": [
+      "Not Started",
+      "In Progress",
+      "Achieved",
+      "Missed"
+    ],
+    "sprint_status": [
+      "Not Started",
+      "Active",
+      "Completed"
+    ],
+    "worker_role": [
+      "Project Manager",
+      "Developer",
+      "Designer",
+      "QA Engineer",
+      "DevOps",
+      "Business Analyst",
+      "Stakeholder",
+      "Other"
+    ],
+    "unit_kind": [
+      "unit",
+      "organ",
+      "registry",
+      "gateway"
+    ],
+    "interface_type": [
+      "api",
+      "cli",
+      "ui",
+      "internal"
+    ],
+    "transport_type": [
+      "function",
+      "http",
+      "cli",
+      "ipc"
+    ],
+    "unit_status": [
+      "planned",
+      "active_development",
+      "stable",
+      "deprecated"
+    ],
+    "hex_ring": [
+      "core/domain",
+      "core/ports",
+      "infrastructure/adapters",
+      "infrastructure/tools",
+      "application/services",
+      "application/agents",
+      "gateway/cli",
+      "ui",
+      "workflows"
+    ],
+    "unit_slot_role": [
+      "contract",
+      "manifest",
+      "implementation",
+      "tests",
+      "state",
+      "prompt",
+      "ui-companion",
+      "registry"
+    ],
+    "verification_requires": [
+      "local",
+      "colab_t4",
+      "api_keys",
+      "owner"
+    ]
+  },
+  "project": {
+    "name": "TAGO v3.8 — tago package",
+    "description": "Sub-graph of root task 3: the Python package that is the single source of truth for the notebook.",
+    "start_date": "2026-11-23",
+    "end_date": "2026-11-24",
+    "status": "Completed",
+    "timezone": "America/Santiago",
+    "currency": "USD",
+    "budget": 0,
+    "budget_spent": 0,
+    "graph_end": {
+      "mode": "handoff",
+      "summary": "All package units implemented and pinned by tests, including the v3.8.2 and v3.8.3 fixes for the real v3.8.1 and v3.8.2 runs.",
+      "next_step": "Notebook generation (notebooks/node.tasks.json).",
+      "next_graph": "notebooks/node.tasks.json",
+      "success_signal": "pytest passes and the architecture test finds no ring violations.",
+      "owner": "Project Owner",
+      "maintenance_rhythm": "Any change to a step/tool contract must update its regression test and rebuild the notebook.",
+      "verification": {
+        "strategy": "command",
+        "commands": [
+          "python -m pytest -q",
+          "python tools/build_notebook.py --check",
+          "python -m tago tasks validate",
+          "python -m pytest -q tests/test_architecture.py"
+        ]
+      }
+    },
+    "project_manager": {
+      "name": "Project Owner",
+      "email": "owner@example.com"
+    },
+    "stakeholders": [
+      {
+        "name": "Project Owner",
+        "email": "owner@example.com",
+        "role": "Stakeholder"
+      }
+    ],
+    "tags": [
+      "package",
+      "hexagonal-ddd"
+    ],
+    "milestones": [],
+    "sprints": [
+      {
+        "name": "Sprint 1 — v3.8 build",
+        "start_date": "2026-11-23",
+        "end_date": "2026-11-23",
+        "goal": "Analysis, package, notebook, tests, docs",
+        "status": "Completed"
+      }
+    ],
+    "risks": [],
+    "change_log": [],
+    "closure": {
+      "actual_end_date": null,
+      "delivered_on_time": null,
+      "delivered_on_budget": null,
+      "lessons_learned": [],
+      "sign_off_by": null,
+      "sign_off_date": null
+    },
+    "parent_graph": {
+      "path": "../node.tasks.json",
+      "task_id": 3
+    }
+  },
+  "project_structure": {
+    "root": "tago",
+    "architecture": "hexagonal-ddd",
+    "architecture_guide": {
+      "concept": "A project is a graph of atomic units arranged in hexagonal rings. Ring 0 is the innermost layer (core domain). Each outer ring may depend on inner rings but inner rings never depend on outer rings. The task graph mirrors the ring structure exactly: task A depends on task B when the unit delivered by A lives in a ring that depends on B's ring.",
+      "rings": [
+        {
+          "ring": 0,
+          "layer": "core/domain",
+          "rule": "Zero tago imports. Step contract, typed worlds, E06 arithmetic rule."
+        },
+        {
+          "ring": 1,
+          "layer": "core/ports",
+          "rule": "Imports domain only. ChatBackend/ToolHost ports and composition registries."
+        },
+        {
+          "ring": 2,
+          "layer": "infrastructure/adapters",
+          "rule": "Implements ports: model profiles, token preflight, Ollama/OpenAI/Anthropic/scripted backends."
+        },
+        {
+          "ring": 2,
+          "layer": "infrastructure/tools",
+          "rule": "Sandbox tools, registry, per-case host. Registers itself into port registries."
+        },
+        {
+          "ring": 2,
+          "layer": "application/services",
+          "rule": "Packs, orchestrator, evaluation, synthetic agents. Imports core + config only."
+        },
+        {
+          "ring": 3,
+          "layer": "gateway/cli",
+          "rule": "python -m tago: tests, analysis, live runs, task-graph validation."
+        },
+        {
+          "ring": 3,
+          "layer": "ui",
+          "rule": "The generated Colab notebook (notebooks/)."
+        },
+        {
+          "ring": 4,
+          "layer": "workflows",
+          "rule": "Experiments, analysis, offline contract suite. May import every inner ring."
+        }
+      ],
+      "atomic_unit_contract": {
+        "description": "Python adaptation: a unit is one module with `# %% cell:` sections (implementation) and the tests that pin its contract.",
+        "required_slots": {
+          "<module>.py": "Implementation with notebook cell markers",
+          "tests/test_*.py or workflows/contracts.py": "Contract tests"
+        },
+        "optional_slots": {
+          "docstring": "Unit documentation"
+        },
+        "registry_rule": "Every unit is listed in unit_registry with path, layer and status."
+      }
+    },
+    "dependency_rules": {
+      "core/domain": [],
+      "core/ports": [
+        "core/domain"
+      ],
+      "infrastructure/adapters": [
+        "core/domain",
+        "core/ports"
+      ],
+      "infrastructure/tools": [
+        "core/domain",
+        "core/ports"
+      ],
+      "application/services": [
+        "core/domain",
+        "core/ports"
+      ],
+      "gateway/cli": [
+        "workflows",
+        "application/services",
+        "infrastructure/adapters",
+        "infrastructure/tools"
+      ],
+      "ui": [
+        "workflows"
+      ],
+      "workflows": [
+        "application/services",
+        "infrastructure/adapters",
+        "infrastructure/tools",
+        "core/ports",
+        "core/domain"
+      ]
+    },
+    "atomic_unit_standard": {
+      "required_slots": [
+        "<module>.py",
+        "tests"
+      ],
+      "optional_slots": [
+        "docstring"
+      ],
+      "slot_roles": {
+        "<module>.py": "implementation",
+        "tests": "tests"
+      }
+    },
+    "path_graph": {
+      "nodes": [
+        {
+          "id": "tago",
+          "type": "folder",
+          "layer": "root",
+          "label": "Package root",
+          "path": "tago"
+        },
+        {
+          "id": "tago/core/domain.py",
+          "type": "unit",
+          "layer": "core/domain",
+          "label": "core.domain",
+          "path": "tago/core/domain.py"
+        },
+        {
+          "id": "tago/core/ports.py",
+          "type": "unit",
+          "layer": "core/ports",
+          "label": "core.ports",
+          "path": "tago/core/ports.py"
+        },
+        {
+          "id": "tago/infrastructure/profiles.py",
+          "type": "unit",
+          "layer": "infrastructure/adapters",
+          "label": "infra.profiles",
+          "path": "tago/infrastructure/profiles.py"
+        },
+        {
+          "id": "tago/infrastructure/backends.py",
+          "type": "unit",
+          "layer": "infrastructure/adapters",
+          "label": "infra.backends",
+          "path": "tago/infrastructure/backends.py"
+        },
+        {
+          "id": "tago/infrastructure/tools.py",
+          "type": "unit",
+          "layer": "infrastructure/tools",
+          "label": "infra.tools",
+          "path": "tago/infrastructure/tools.py"
+        },
+        {
+          "id": "tago/application/packs.py",
+          "type": "unit",
+          "layer": "application/services",
+          "label": "app.packs",
+          "path": "tago/application/packs.py"
+        },
+        {
+          "id": "tago/application/evaluation.py",
+          "type": "unit",
+          "layer": "application/services",
+          "label": "app.evaluation",
+          "path": "tago/application/evaluation.py"
+        },
+        {
+          "id": "tago/application/orchestrator.py",
+          "type": "unit",
+          "layer": "application/services",
+          "label": "app.orchestrator",
+          "path": "tago/application/orchestrator.py"
+        },
+        {
+          "id": "tago/application/synthetic.py",
+          "type": "unit",
+          "layer": "application/services",
+          "label": "app.synthetic",
+          "path": "tago/application/synthetic.py"
+        },
+        {
+          "id": "tago/workflows/experiments.py",
+          "type": "unit",
+          "layer": "workflows",
+          "label": "workflows.experiments",
+          "path": "tago/workflows/experiments.py"
+        },
+        {
+          "id": "tago/workflows/analysis.py",
+          "type": "unit",
+          "layer": "workflows",
+          "label": "workflows.analysis",
+          "path": "tago/workflows/analysis.py"
+        },
+        {
+          "id": "tago/workflows/contracts.py",
+          "type": "unit",
+          "layer": "workflows",
+          "label": "workflows.contracts",
+          "path": "tago/workflows/contracts.py"
+        },
+        {
+          "id": "tago/__main__.py",
+          "type": "unit",
+          "layer": "gateway/cli",
+          "label": "gateway.cli",
+          "path": "tago/__main__.py"
+        },
+        {
+          "id": "tago/gateway/project_tasks.py",
+          "type": "unit",
+          "layer": "gateway/cli",
+          "label": "gateway.tasks",
+          "path": "tago/gateway/project_tasks.py"
+        }
+      ],
+      "edges": [
+        {
+          "from": "tago",
+          "to": "tago/core/domain.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago",
+          "to": "tago/core/ports.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/core/ports.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/infrastructure/profiles.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/infrastructure/profiles.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/infrastructure/backends.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/infrastructure/backends.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/infrastructure/backends.py",
+          "to": "tago/infrastructure/profiles.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/infrastructure/tools.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/infrastructure/tools.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/infrastructure/tools.py",
+          "to": "tago/core/ports.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/application/packs.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/application/packs.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/application/packs.py",
+          "to": "tago/core/ports.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/application/evaluation.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/application/evaluation.py",
+          "to": "tago/core/domain.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/application/orchestrator.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/application/orchestrator.py",
+          "to": "tago/application/packs.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/application/orchestrator.py",
+          "to": "tago/application/evaluation.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/application/synthetic.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/application/synthetic.py",
+          "to": "tago/application/packs.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/workflows/experiments.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/workflows/experiments.py",
+          "to": "tago/application/orchestrator.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/workflows/experiments.py",
+          "to": "tago/infrastructure/backends.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/workflows/analysis.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/workflows/analysis.py",
+          "to": "tago/application/evaluation.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/workflows/contracts.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/workflows/contracts.py",
+          "to": "tago/application/orchestrator.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/workflows/contracts.py",
+          "to": "tago/infrastructure/backends.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/workflows/contracts.py",
+          "to": "tago/infrastructure/tools.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/__main__.py",
+          "role": "contains"
+        },
+        {
+          "from": "tago/__main__.py",
+          "to": "tago/workflows/experiments.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/__main__.py",
+          "to": "tago/workflows/analysis.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago/__main__.py",
+          "to": "tago/gateway/project_tasks.py",
+          "role": "depends_on"
+        },
+        {
+          "from": "tago",
+          "to": "tago/gateway/project_tasks.py",
+          "role": "contains"
+        }
+      ]
+    }
+  },
+  "unit_registry": [
+    {
+      "name": "core.domain",
+      "path": "tago/core/domain.py",
+      "kind": "unit",
+      "layer": "core/domain",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [],
+      "files": [
+        "domain.py"
+      ]
+    },
+    {
+      "name": "core.ports",
+      "path": "tago/core/ports.py",
+      "kind": "unit",
+      "layer": "core/ports",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "ports.py"
+      ]
+    },
+    {
+      "name": "infra.profiles",
+      "path": "tago/infrastructure/profiles.py",
+      "kind": "unit",
+      "layer": "infrastructure/adapters",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "profiles.py"
+      ]
+    },
+    {
+      "name": "infra.backends",
+      "path": "tago/infrastructure/backends.py",
+      "kind": "unit",
+      "layer": "infrastructure/adapters",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        },
+        {
+          "unit": "infra.profiles",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "backends.py"
+      ]
+    },
+    {
+      "name": "infra.tools",
+      "path": "tago/infrastructure/tools.py",
+      "kind": "unit",
+      "layer": "infrastructure/tools",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        },
+        {
+          "unit": "core.ports",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "tools.py"
+      ]
+    },
+    {
+      "name": "app.packs",
+      "path": "tago/application/packs.py",
+      "kind": "unit",
+      "layer": "application/services",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        },
+        {
+          "unit": "core.ports",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "packs.py"
+      ]
+    },
+    {
+      "name": "app.evaluation",
+      "path": "tago/application/evaluation.py",
+      "kind": "unit",
+      "layer": "application/services",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "core.domain",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "evaluation.py"
+      ]
+    },
+    {
+      "name": "app.orchestrator",
+      "path": "tago/application/orchestrator.py",
+      "kind": "unit",
+      "layer": "application/services",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "app.packs",
+          "role": "depends_on"
+        },
+        {
+          "unit": "app.evaluation",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "orchestrator.py"
+      ]
+    },
+    {
+      "name": "app.synthetic",
+      "path": "tago/application/synthetic.py",
+      "kind": "unit",
+      "layer": "application/services",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "app.packs",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "synthetic.py"
+      ]
+    },
+    {
+      "name": "workflows.experiments",
+      "path": "tago/workflows/experiments.py",
+      "kind": "unit",
+      "layer": "workflows",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "app.orchestrator",
+          "role": "depends_on"
+        },
+        {
+          "unit": "infra.backends",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "experiments.py"
+      ]
+    },
+    {
+      "name": "workflows.analysis",
+      "path": "tago/workflows/analysis.py",
+      "kind": "unit",
+      "layer": "workflows",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "app.evaluation",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "analysis.py"
+      ]
+    },
+    {
+      "name": "workflows.contracts",
+      "path": "tago/workflows/contracts.py",
+      "kind": "unit",
+      "layer": "workflows",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "app.orchestrator",
+          "role": "depends_on"
+        },
+        {
+          "unit": "infra.backends",
+          "role": "depends_on"
+        },
+        {
+          "unit": "infra.tools",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "contracts.py"
+      ]
+    },
+    {
+      "name": "gateway.cli",
+      "path": "tago/__main__.py",
+      "kind": "gateway",
+      "layer": "gateway/cli",
+      "interface_type": "cli",
+      "transport": "cli",
+      "status": "stable",
+      "depends_on": [
+        {
+          "unit": "workflows.experiments",
+          "role": "depends_on"
+        },
+        {
+          "unit": "workflows.analysis",
+          "role": "depends_on"
+        },
+        {
+          "unit": "gateway.tasks",
+          "role": "depends_on"
+        }
+      ],
+      "files": [
+        "__main__.py"
+      ]
+    },
+    {
+      "name": "gateway.tasks",
+      "path": "tago/gateway/project_tasks.py",
+      "kind": "gateway",
+      "layer": "gateway/cli",
+      "interface_type": "cli",
+      "transport": "cli",
+      "status": "stable",
+      "depends_on": [],
+      "files": [
+        "project_tasks.py"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "Core Domain",
+      "description": "Ring 0",
+      "parent_category_name": null
+    },
+    {
+      "name": "Core Ports",
+      "description": "Ring 1",
+      "parent_category_name": null
+    },
+    {
+      "name": "Infrastructure",
+      "description": "Ring 2 adapters and tools",
+      "parent_category_name": null
+    },
+    {
+      "name": "Application",
+      "description": "Ring 2 services",
+      "parent_category_name": null
+    },
+    {
+      "name": "Gateway",
+      "description": "Ring 3 CLI",
+      "parent_category_name": null
+    },
+    {
+      "name": "Workflows",
+      "description": "Ring 4 composition",
+      "parent_category_name": null
+    }
+  ],
+  "workers": [
+    {
+      "name": "Project Owner",
+      "email": "owner@example.com",
+      "role": "Project Manager",
+      "worker_id": "project-owner",
+      "skills": [
+        "Colab runs",
+        "API keys",
+        "GitHub publishing",
+        "Product decisions"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 10,
+      "timezone": "America/Santiago"
+    },
+    {
+      "name": "Claude (AI assistant)",
+      "email": "noreply@anthropic.com",
+      "role": "Developer",
+      "worker_id": "claude-assistant",
+      "skills": [
+        "Python",
+        "Evaluation design",
+        "Testing",
+        "Documentation"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 40,
+      "timezone": "UTC"
+    }
+  ],
+  "tasks": [
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Core Domain",
+      "subcategory_name": "",
+      "target_unit": "core.domain",
+      "path_node_id": "tago/core/domain.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-0"
+      ],
+      "related_paths": [
+        "tago/core/domain.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/core/domain.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"world or arithmetic or reference\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "World validators and arithmetic tests pass."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 1,
+      "task_name": "Port domain contracts and move the E06 arithmetic rule into the domain",
+      "description": "Split tago_v37 sections 2.1, 3 and 5.3 into tago/core/domain.py. AgentStepBase shares validation between the generic v3.7 AgentStep and v3.8 per-pack schemas. arithmetic_value moved here because both the code_check tool and the hidden rubric use it."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Core Ports",
+      "subcategory_name": "",
+      "target_unit": "core.ports",
+      "path_node_id": "tago/core/ports.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-1",
+        "I-09"
+      ],
+      "related_paths": [
+        "tago/core/ports.py",
+        "tests/test_architecture.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/core/ports.py",
+          "tests/test_architecture.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_architecture.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "No inner ring imports an outer ring."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 1,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 2,
+      "task_name": "Define ports and composition registries; enforce ring rules",
+      "description": "tago/core/ports.py declares ChatBackend and ToolHost protocols plus HOST_FACTORIES/TOOL_REGISTRIES so the application ring never imports infrastructure (fixes review issue I-09). tests/test_architecture.py checks every tago import against the ring rules."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Infrastructure",
+      "subcategory_name": "",
+      "target_unit": "infra.backends",
+      "path_node_id": "tago/infrastructure/backends.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-2",
+        "I-04",
+        "I-10"
+      ],
+      "related_paths": [
+        "tago/infrastructure/profiles.py",
+        "tago/infrastructure/backends.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/infrastructure/profiles.py",
+          "tago/infrastructure/backends.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"profile or token or adapters or ollama or unknown_model\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Backend request/response contracts pass with mocked HTTP."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 3,
+      "task_name": "Model profiles, token preflight and backends (Ollama, OpenAI-compatible, Anthropic, scripted)",
+      "description": "One shared call path (budget, preflight, request, schema validation, record). Ollama gains warmup()/keep_alive/unload() (I-04). API backends use a provable UTF-8 byte upper bound and provider-reported usage (I-10). Five local profiles registered; only qwen2.5:7b measured."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Infrastructure",
+      "subcategory_name": "",
+      "target_unit": "infra.tools",
+      "path_node_id": "tago/infrastructure/tools.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-2",
+        "I-02",
+        "I-03"
+      ],
+      "related_paths": [
+        "tago/infrastructure/tools.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/infrastructure/tools.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"tool or duplicate or browser or reconcile or registry or retrieval or graph\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Tool authorization, ordering and duplicate tests pass."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 4,
+      "task_name": "Sandbox tools with explicit argument contracts and duplicate-call guard",
+      "description": "Port all 16 tools. Argument descriptions and purposes are shown to the model; registry errors name expected vs received keys (I-02); the host refuses identical repeated calls (I-03) and logs denied calls."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.packs",
+      "path_node_id": "tago/application/packs.py",
+      "unit_bindings": null,
+      "tags": [
+        "I-01"
+      ],
+      "related_paths": [
+        "tago/application/packs.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/packs.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k constrained",
+          "python -m pytest -q tests/test_v37_artifact.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "All 9 refused v3.7 outputs are invalid under the v3.8 schema; valid ones still validate."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 1,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 4,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 5,
+      "task_name": "Workflow packs and the per-pack constrained step schema",
+      "description": "build_step_schema() creates a union of exact per-tool argument models and a Literal finding-key enum per workflow, so Ollama grammar decoding cannot emit the v3.7 failing calls (I-01)."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.orchestrator",
+      "path_node_id": "tago/application/orchestrator.py",
+      "unit_bindings": null,
+      "tags": [
+        "I-02",
+        "I-03",
+        "I-06",
+        "I-07"
+      ],
+      "related_paths": [
+        "tago/application/orchestrator.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/orchestrator.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"repair or progress or observations or loop or budget or transport\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Repair/loop/progress regression tests pass."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 5,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 6,
+      "task_name": "Orchestrator v3.8: informative repair, progress hint, consecutive repair limit, compact observations",
+      "description": "Feedback echoes the rejected step; GUIDED_PROGRESS shows tools not yet called; repair limit counts consecutive failures; observations sent once (I-02, I-03, I-06, I-07). CONSTRAINED_SCHEMA/GUIDED_PROGRESS switches allow a v3.7-mode ablation."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.evaluation",
+      "path_node_id": "tago/application/evaluation.py",
+      "unit_bindings": null,
+      "tags": [
+        "I-11"
+      ],
+      "related_paths": [
+        "tago/application/evaluation.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/evaluation.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"classify or rubric or provenance or statistics or amount\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Taxonomy and rubric tests pass."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 1,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 7,
+      "task_name": "Evaluation: failure taxonomy, duplicate counts, per-group category statistics",
+      "description": "classify_failure() maps every failed run to one primary category (I-11); summarize() reports categories per workflow/mode."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Workflows",
+      "subcategory_name": "",
+      "target_unit": "workflows.experiments",
+      "path_node_id": "tago/workflows/experiments.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-4",
+        "e2e"
+      ],
+      "related_paths": [
+        "tago/workflows/experiments.py",
+        "tago/workflows/analysis.py",
+        "tago/workflows/contracts.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/workflows/experiments.py",
+          "tago/workflows/analysis.py",
+          "tago/workflows/contracts.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_e2e_fake_ollama.py tests/test_v37_artifact.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Full pipeline passes over real HTTP against the fake server; v3.7 analysis is pinned."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 6,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 7,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 8,
+      "task_name": "Workflows: experiments, model matrix, analysis and offline contract suite; end-to-end over HTTP",
+      "description": "Golden/synthetic harnesses record settings and warm-up; run_model_matrix compares models under identical rules; analysis reads v3.7 and v3.8 folders; a fake Ollama HTTP server exercises the full pipeline (golden x10, synthetic x6, freeze, replay)."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Gateway",
+      "subcategory_name": "",
+      "target_unit": "gateway.cli",
+      "path_node_id": "tago/__main__.py",
+      "unit_bindings": null,
+      "tags": [
+        "ring-3"
+      ],
+      "related_paths": [
+        "tago/__main__.py",
+        "tago/gateway/project_tasks.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/__main__.py",
+          "tago/gateway/project_tasks.py"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -m tago tasks validate",
+          "python -m tago test"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Validator reports 0 errors; offline suite passes from the CLI."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 8,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 9,
+      "task_name": "CLI gateway and node.tasks.json validator/verifier",
+      "description": "python -m tago test|analyze|golden|results check|tasks validate|status|verify|gate. The task tools make the project definition of done executable."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.packs",
+      "path_node_id": "tago/application/packs.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-01",
+        "N-02",
+        "N-03",
+        "N-04",
+        "N-05"
+      ],
+      "related_paths": [
+        "tago/application/packs.py",
+        "tago/application/orchestrator.py",
+        "tago/infrastructure/tools.py",
+        "tests/test_v381_artifact.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/packs.py",
+          "tago/application/orchestrator.py",
+          "tago/infrastructure/tools.py",
+          "tests/test_v381_artifact.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v381_artifact.py",
+          "python -m pytest -q tests/test_contracts.py -k \"V38\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Every real v3.8.1 envelope failure and the description leak are undecodable; valid calls still validate."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 5,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 6,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 10,
+      "task_name": "v3.8.2 state-conditioned step schema, citation hints and reference normalisation",
+      "description": "Fixes N-01..N-05 from the real v3.8.1 run: build_state_schema() makes only the legal branch decodable (tool over uncalled tools, then a final with mandatory status/action/findings/citations; E06 re-opens code_check); descriptions removed from the decoding schema, identifier args get a no-space pattern; citation errors quote the observation text and compare whitespace-insensitively; the host strips # and quotes from reference. Ablation switch STATE_CONDITIONED."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.synthetic",
+      "path_node_id": "tago/application/synthetic.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-06"
+      ],
+      "related_paths": [
+        "tago/application/synthetic.py",
+        "tago/application/packs.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/synthetic.py",
+          "tago/application/packs.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"generator or whole_token or invalid_generation\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Retry-with-feedback and whole-token tests pass."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 5,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 11,
+      "task_name": "v3.8.2 synthetic generator: redraft with the validation error, whole-token reference",
+      "description": "Fixes N-06: 3 of 6 synthetic cases were lost at generation. SyntheticCaseAgent retries (TAGO_GENERATION_ATTEMPTS, default 3) with the exact error, keeps every attempt in generation_errors, never substitutes a fixture. validate_case requires the reference as a whole token. Numeric hints added to the E01 constraint."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Infrastructure",
+      "subcategory_name": "",
+      "target_unit": "infra.backends",
+      "path_node_id": "tago/infrastructure/backends.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-07",
+        "N-09"
+      ],
+      "related_paths": [
+        "tago/infrastructure/profiles.py",
+        "tago/infrastructure/backends.py",
+        "tago/workflows/experiments.py",
+        "tago/config.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/infrastructure/profiles.py",
+          "tago/infrastructure/backends.py",
+          "tago/workflows/experiments.py",
+          "tago/config.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"warmup or profile\" tests/test_e2e_fake_ollama.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Warm-up context test and profile resolution tests pass; the HTTP pipeline still passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 12,
+      "task_name": "v3.8.2 runtime: warm-up with the chat context, candidate model profiles, tolerant matrix, think switch",
+      "description": "Fixes N-07 and N-09 and prepares the model comparison: warm-up passes num_ctx (68 s warm-up + 79.6 s first call in the real run); profiles for granite4.1:8b, ministral-3:8b/14b, gemma4:12b, qwen3.5:9b, qwen3:14b, phi4 (status candidate; tags confirmed on ollama.com, tokenizer ids unverified); hybrid-thinking profiles get output_tokens=3000; TAGO_THINK; optional pulls and per-model error capture in the matrix; TAGO_MODEL_MATRIX=recommended."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.packs",
+      "path_node_id": "tago/application/packs.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-10",
+        "N-12"
+      ],
+      "related_paths": [
+        "tago/core/domain.py",
+        "tago/application/packs.py",
+        "tago/application/orchestrator.py",
+        "tests/test_v382_artifact.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/core/domain.py",
+          "tago/application/packs.py",
+          "tago/application/orchestrator.py",
+          "tests/test_v382_artifact.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v382_artifact.py",
+          "python -m pytest -q tests/test_contracts.py -k \"V38\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "All 9 refused Run C finals are undecodable; a grounded final validates; the wrong status is undecodable."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 10,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 13,
+      "task_name": "v3.8.3 grounded quotes: citations can only be exact fragments; status and action fixed per workflow",
+      "description": "Fixes N-10 and N-12 from Run C: quote_fragments() lists the verbatim pieces of an observation; build_state_schema(..., observations) makes source_id an observed id and quote one of its fragments; status/action are Literal contract values and the worker prompt names required_status. Switch TAGO_GROUNDED_QUOTES (default on) keeps the ablation possible."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Infrastructure",
+      "subcategory_name": "",
+      "target_unit": "infra.backends",
+      "path_node_id": "tago/infrastructure/profiles.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-11"
+      ],
+      "related_paths": [
+        "tago/infrastructure/profiles.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/infrastructure/profiles.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"preflight or token or profile\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "The estimate is within the real range for a realistic tokenizer double."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 14,
+      "task_name": "v3.8.3 token preflight fix",
+      "description": "Fixes N-11: len() of a BatchEncoding counted its keys, so prompt_tokens_estimated was 2 in every Run C call and the context guard was inactive. The counter now handles dict and nested outputs and applies a plausibility floor."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.synthetic",
+      "path_node_id": "tago/application/synthetic.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-13",
+        "N-15"
+      ],
+      "related_paths": [
+        "tago/application/synthetic.py",
+        "tago/application/packs.py",
+        "tago/core/domain.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/synthetic.py",
+          "tago/application/packs.py",
+          "tago/core/domain.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v382_artifact.py -k \"auditor_accepted\"",
+          "python -m pytest -q tests/test_contracts.py -k \"synthetic or arithmetic\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "The invalid Run C case is rejected deterministically."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 11,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 15,
+      "task_name": "v3.8.3 deterministic synthetic validation and clearer arithmetic error",
+      "description": "Fixes N-13 and N-15: validate_synthetic rejects placeholder ids, unknown field names, digits that contradict the world and stated numbers that are absent, before the same-model auditor runs; the E06 rule error lists the allowed syntax."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Infrastructure",
+      "subcategory_name": "",
+      "target_unit": "infra.backends",
+      "path_node_id": "tago/infrastructure/backends.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-14"
+      ],
+      "related_paths": [
+        "tago/infrastructure/backends.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/infrastructure/backends.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_contracts.py -k \"warmup\" tests/test_e2e_fake_ollama.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Warm-up tests pass; the HTTP pipeline still passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 12,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 16,
+      "task_name": "v3.8.3 warm-up with a chat call",
+      "description": "Addresses N-14 (first timed call 93.8 s after a 71 s warm-up): the warm-up now also sends a tiny chat request with the chat context. The effect on latency is NOT verified; results task 12 investigates the cause."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.packs",
+      "path_node_id": "tago/application/packs.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-17"
+      ],
+      "related_paths": [
+        "tago/application/packs.py",
+        "tago/application/orchestrator.py",
+        "tests/test_v383_artifact.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/packs.py",
+          "tago/application/orchestrator.py",
+          "tests/test_v383_artifact.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v383_artifact.py -k \"undecodable\"",
+          "python -m pytest -q tests/test_contracts.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "The Run D E06 final is undecodable; one citation per observation validates."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 13,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 17,
+      "task_name": "v3.8.4 one citation per observation",
+      "description": "Fixes N-17 from Run D: the E06 final named obs-1 in a finding but cited only obs-3, and was refused three times. The grounded final schema is a fixed-length citation list (one per observation, quote chosen among that observation fragments); the refusal names the uncited ids."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Application",
+      "subcategory_name": "",
+      "target_unit": "app.packs",
+      "path_node_id": "tago/application/packs.py",
+      "unit_bindings": null,
+      "tags": [
+        "N-18",
+        "N-19"
+      ],
+      "related_paths": [
+        "tago/application/packs.py",
+        "tago/infrastructure/tools.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/application/packs.py",
+          "tago/infrastructure/tools.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v383_artifact.py -k \"reference or leaked\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "The Run D wrong reference is undecodable and the correct one validates; the leaked sentence is gone from the registry."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 13,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 18,
+      "task_name": "v3.8.4 reference candidates and tool-argument text",
+      "description": "Fixes N-18 and N-19 from Run D: the tool reference is chosen among the identifiers written in the request (invoice_id_12345 could not be emitted); the retrieve argument text is no longer a sentence the model copies into a query."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Workflows",
+      "subcategory_name": "",
+      "target_unit": "workflows.experiments",
+      "path_node_id": "tago/workflows/experiments.py",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tago/workflows/experiments.py",
+        "tago/config.py",
+        "tests/test_campaign.py",
+        "notebooks/narrative.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago/workflows/experiments.py",
+          "tago/config.py",
+          "tests/test_campaign.py",
+          "notebooks/narrative.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_campaign.py",
+          "python tools/build_notebook.py --check"
+        ],
+        "expected_outputs": [],
+        "success_signal": "The campaign runs offline with scripted backends and the notebook contains section 11.6."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 18,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 19,
+      "task_name": "Experiment campaign in the notebook (section 11.6)",
+      "description": "run_campaign() repeats the golden cases under other settings in the same Colab session: four ablation rungs, a different-family auditor sweep, other local models and thinking models (think default and off). Models are pulled and deleted one at a time, a broken item is recorded and the campaign continues, a time budget skips the rest, and every run records the switches it really used. Default ON in Colab (TAGO_RUN_CAMPAIGN=0 skips it)."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_4_campaign_colab_t4",
+        "results/v38_4_repeat_colab_t4_qwen2.5-7b",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_4_campaign_colab_t4",
+          "results/v38_4_repeat_colab_t4_qwen2.5-7b",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v384_campaign_artifact.py",
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['N-26','N-30','The experiment campaign (Run F)'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Run F is pinned by tests and the review records N-26..N-30."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 19,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 20,
+      "task_name": "Analyse the real experiment campaign (Run F) and score the predictions",
+      "description": "Ablation 0/3, 0/3, 2/3, 3/3; other models 2/3, 2/3, 1/3, 2/3, 3/3; thinking models 3/3 with the constraint intact; auditor sweep inconclusive; main run repeats Run E. Findings N-26..N-30 in docs/v38_review.md section 10, scorecard in README and notebook 11.5."
+    }
+  ],
+  "required_fields": [
+    "project.name",
+    "project.start_date",
+    "project.end_date",
+    "project.status",
+    "project.timezone",
+    "project.currency",
+    "project.project_manager",
+    "tasks[].task_id",
+    "tasks[].task_name",
+    "tasks[].start_date",
+    "tasks[].end_date",
+    "tasks[].due_date",
+    "tasks[].priority",
+    "tasks[].status",
+    "tasks[].progress_percentage"
+  ],
+  "optional_fields": [
+    "project.description",
+    "project.budget",
+    "project.budget_spent",
+    "project.stakeholders",
+    "project.tags",
+    "project.milestones",
+    "project.sprints",
+    "project.risks",
+    "project.change_log",
+    "project.closure",
+    "project_structure",
+    "unit_registry",
+    "tasks[].description",
+    "tasks[].acceptance_criteria",
+    "tasks[].category_name",
+    "tasks[].subcategory_name",
+    "tasks[].target_unit",
+    "tasks[].path_node_id",
+    "tasks[].unit_bindings",
+    "tasks[].sprint_name",
+    "tasks[].complexity",
+    "tasks[].blocker_reason",
+    "tasks[].estimated_hours",
+    "tasks[].actual_hours",
+    "tasks[].is_critical_path",
+    "tasks[].tags",
+    "tasks[].related_paths",
+    "tasks[].execution_context",
+    "tasks[].verification",
+    "tasks[].assigned_workers",
+    "tasks[].reviewer",
+    "tasks[].dependencies",
+    "tasks[].subtasks",
+    "tasks[].attachments",
+    "tasks[].links",
+    "tasks[].comments",
+    "categories",
+    "workers",
+    "project.parent_graph",
+    "tasks[].verification.requires"
+  ],
+  "navigation": {
+    "rootModule": "tago/node.tasks.json",
+    "modules": [
+      {
+        "path": "tago/node.tasks.json",
+        "label": "tago package",
+        "name": "tago package",
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      }
+    ]
+  }
+}

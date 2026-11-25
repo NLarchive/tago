@@ -1,0 +1,126 @@
+{
+  "path": "/content/tago_v38_runs/synthetic-6204e6162195",
+  "requested": 6,
+  "attempted": 6,
+  "stopped_early": false,
+  "groups": [
+    {
+      "workflow_id": "E01",
+      "mode": "clean",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 1,
+      "eligible_pass_rate": 1.0,
+      "end_to_end_yield": 1.0,
+      "wilson_95": [
+        0.2065,
+        1.0
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "pass": 1
+      },
+      "failure_categories": {}
+    },
+    {
+      "workflow_id": "E01",
+      "mode": "noisy",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 1,
+      "eligible_pass_rate": 1.0,
+      "end_to_end_yield": 1.0,
+      "wilson_95": [
+        0.2065,
+        1.0
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "pass": 1
+      },
+      "failure_categories": {}
+    },
+    {
+      "workflow_id": "E03",
+      "mode": "clean",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 1,
+      "eligible_pass_rate": 1.0,
+      "end_to_end_yield": 1.0,
+      "wilson_95": [
+        0.2065,
+        1.0
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "pass": 1
+      },
+      "failure_categories": {}
+    },
+    {
+      "workflow_id": "E03",
+      "mode": "noisy",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 0,
+      "eligible_pass_rate": 0.0,
+      "end_to_end_yield": 0.0,
+      "wilson_95": [
+        0.0,
+        0.7935
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "orchestrator_failure": 1
+      },
+      "failure_categories": {
+        "wrong_reference": 1
+      }
+    },
+    {
+      "workflow_id": "E06",
+      "mode": "clean",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 1,
+      "eligible_pass_rate": 1.0,
+      "end_to_end_yield": 1.0,
+      "wilson_95": [
+        0.2065,
+        1.0
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "pass": 1
+      },
+      "failure_categories": {}
+    },
+    {
+      "workflow_id": "E06",
+      "mode": "noisy",
+      "attempted": 1,
+      "eligible": 1,
+      "passed": 0,
+      "eligible_pass_rate": 0.0,
+      "end_to_end_yield": 0.0,
+      "wilson_95": [
+        0.0,
+        0.7935
+      ],
+      "unique_cases": 1,
+      "unique_requests": 1,
+      "outcomes": {
+        "orchestrator_failure": 1
+      },
+      "failure_categories": {
+        "duplicate_tool_loop": 1
+      }
+    }
+  ]
+}

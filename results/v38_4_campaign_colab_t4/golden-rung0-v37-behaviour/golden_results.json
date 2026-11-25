@@ -1,0 +1,620 @@
+[
+  {
+    "workflow_id": "E01",
+    "case": {
+      "request": "Please review refund ticket T-101 and prepare the next permitted action.",
+      "world": {
+        "ticket_id": "T-101",
+        "customer_id": "C-101",
+        "refund_cents": 9000,
+        "self_service_limit_cents": 5000
+      }
+    },
+    "state": {
+      "status": "QUARANTINED",
+      "node": "quarantine",
+      "trace": [
+        {
+          "from": "start",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "quarantine"
+        }
+      ],
+      "decision": null,
+      "observations": [
+        {
+          "id": "obs-1",
+          "tool": "ticket_read",
+          "arguments": {
+            "reference": "T-101"
+          },
+          "data": {
+            "ticket_id": "T-101",
+            "customer_id": "C-101",
+            "refund_cents": 9000
+          },
+          "content": "{\"customer_id\":\"C-101\",\"refund_cents\":9000,\"ticket_id\":\"T-101\"}",
+          "sandbox": true
+        },
+        {
+          "id": "obs-2",
+          "tool": "retrieve",
+          "arguments": {
+            "query": "refund policy self-service limit"
+          },
+          "data": {
+            "mode": "hybrid",
+            "hits": [
+              {
+                "document_id": "policy-or-decision",
+                "text": "Customer support {\"above_limit\":\"human approval required\",\"self_service_limit_cents\":5000}",
+                "score": 0.23568
+              },
+              {
+                "document_id": "case-reference",
+                "text": "{\"ticket_id\":\"T-101\"}",
+                "score": 0.05029
+              },
+              {
+                "document_id": "distractor",
+                "text": "Unrelated fictional cafeteria opening hours: 08:00 to 17:00.",
+                "score": 0.00695
+              }
+            ]
+          },
+          "content": "{\"hits\":[{\"document_id\":\"policy-or-decision\",\"score\":0.23568,\"text\":\"Customer support {\\\"above_limit\\\":\\\"human approval required\\\",\\\"self_service_limit_cents\\\":5000}\"},{\"document_id\":\"case-reference\",\"score\":0.05029,\"text\":\"{\\\"ticket_id\\\":\\\"T-101\\\"}\"},{\"document_id\":\"distractor\",\"score\":0.00695,\"text\":\"Unrelated fictional cafeteria opening hours: 08:00 to 17:00.\"}],\"mode\":\"hybrid\"}",
+          "sandbox": true
+        }
+      ],
+      "error": "ToolError: Duplicate call: ticket_read with these arguments already returned obs-1. Use that observation and call a different tool or finish. | rejected step: {\"action\":null,\"citations\":[],\"findings\":[],\"kind\":\"tool\",\"status\":null,\"summary\":\"\",\"tool\":{\"arguments\":{\"reference\":\"T-101\"},\"name\":\"ticket_read\"}}",
+      "repairs": 4,
+      "repair_log": [
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: ticket_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: ticket_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: retrieve with these arguments already returned obs-2. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: ticket_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        }
+      ],
+      "approval_request": null,
+      "executed": false,
+      "model_calls": 6,
+      "schema": "AgentStep",
+      "step_schemas": [
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep"
+      ],
+      "denied_tool_calls": [
+        {
+          "tool": "ticket_read",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "ticket_read",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "retrieve",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "ticket_read",
+          "reason": "duplicate"
+        }
+      ],
+      "failure_category": "duplicate_tool_loop",
+      "wall_sec": 9.518,
+      "duplicate_calls": 0,
+      "call_records": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "evaluation": {
+      "ok": false,
+      "checks": {
+        "status": false,
+        "action": false,
+        "no_runtime_error": false,
+        "no_external_execution": true,
+        "required_tools": true,
+        "finding:refund_cents": false,
+        "finding:requires_approval": false,
+        "provenance:refund_cents": false,
+        "provenance:requires_approval": false,
+        "human_gate": false
+      },
+      "expected_findings": {
+        "refund_cents": 9000,
+        "requires_approval": true
+      },
+      "failure_category": "duplicate_tool_loop"
+    }
+  },
+  {
+    "workflow_id": "E03",
+    "case": {
+      "request": "Reconcile invoice INV-301 against the goods receipt and flag the overcharge.",
+      "world": {
+        "invoice_id": "INV-301",
+        "billed_units": 12,
+        "received_units": 10,
+        "unit_price_cents": 2500
+      }
+    },
+    "state": {
+      "status": "QUARANTINED",
+      "node": "quarantine",
+      "trace": [
+        {
+          "from": "start",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "quarantine"
+        }
+      ],
+      "decision": null,
+      "observations": [
+        {
+          "id": "obs-1",
+          "tool": "invoice_read",
+          "arguments": {
+            "reference": "INV-301"
+          },
+          "data": {
+            "invoice_id": "INV-301",
+            "billed_units": 12,
+            "unit_price_cents": 2500
+          },
+          "content": "{\"billed_units\":12,\"invoice_id\":\"INV-301\",\"unit_price_cents\":2500}",
+          "sandbox": true
+        },
+        {
+          "id": "obs-2",
+          "tool": "receipt_read",
+          "arguments": {
+            "reference": "INV-301"
+          },
+          "data": {
+            "invoice_id": "INV-301",
+            "received_units": 10
+          },
+          "content": "{\"invoice_id\":\"INV-301\",\"received_units\":10}",
+          "sandbox": true
+        },
+        {
+          "id": "obs-3",
+          "tool": "reconcile",
+          "arguments": {
+            "reference": "INV-301"
+          },
+          "data": {
+            "billed_cents": 30000,
+            "payable_cents": 25000,
+            "overcharge_cents": 5000
+          },
+          "content": "{\"billed_cents\":30000,\"overcharge_cents\":5000,\"payable_cents\":25000}",
+          "sandbox": true
+        }
+      ],
+      "error": "ToolError: Duplicate call: reconcile with these arguments already returned obs-3. Use that observation and call a different tool or finish. | rejected step: {\"action\":null,\"citations\":[],\"findings\":[],\"kind\":\"tool\",\"status\":null,\"summary\":\"\",\"tool\":{\"arguments\":{\"reference\":\"INV-301\"},\"name\":\"reconcile\"}}",
+      "repairs": 3,
+      "repair_log": [
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: reconcile with these arguments already returned obs-3. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "infer",
+          "error": "ValidationError: 1 validation error for AgentStep\n  Value error, Final steps require status, action and findings, with tool=null [type=value_error, input_value={'kind': 'final', 'tool':... and dispute drafting.'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.14/v/value_error"
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: reconcile with these arguments already returned obs-3. Use that observation and call a different tool or finish."
+        }
+      ],
+      "approval_request": null,
+      "executed": false,
+      "model_calls": 6,
+      "schema": "AgentStep",
+      "step_schemas": [
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep"
+      ],
+      "denied_tool_calls": [
+        {
+          "tool": "reconcile",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "reconcile",
+          "reason": "duplicate"
+        }
+      ],
+      "failure_category": "duplicate_tool_loop",
+      "wall_sec": 16.482,
+      "duplicate_calls": 0,
+      "call_records": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    "evaluation": {
+      "ok": false,
+      "checks": {
+        "status": false,
+        "action": false,
+        "no_runtime_error": false,
+        "no_external_execution": true,
+        "required_tools": true,
+        "finding:overcharge_cents": false,
+        "finding:payable_cents": false,
+        "provenance:overcharge_cents": false,
+        "provenance:payable_cents": false,
+        "human_gate": false
+      },
+      "expected_findings": {
+        "overcharge_cents": 5000,
+        "payable_cents": 25000
+      },
+      "failure_category": "duplicate_tool_loop"
+    }
+  },
+  {
+    "workflow_id": "E06",
+    "case": {
+      "request": "Fix inclusive-sum issue BUG-601 and check the proposed arithmetic expression.",
+      "world": {
+        "issue_id": "BUG-601",
+        "operation": "inclusive_sum",
+        "buggy_expression": "n * (n - 1) // 2",
+        "maximum_n": 10
+      }
+    },
+    "state": {
+      "status": "QUARANTINED",
+      "node": "quarantine",
+      "trace": [
+        {
+          "from": "start",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "infer"
+        },
+        {
+          "from": "infer",
+          "to": "validate"
+        },
+        {
+          "from": "validate",
+          "to": "tool"
+        },
+        {
+          "from": "tool",
+          "to": "repair"
+        },
+        {
+          "from": "repair",
+          "to": "quarantine"
+        }
+      ],
+      "decision": null,
+      "observations": [
+        {
+          "id": "obs-1",
+          "tool": "code_read",
+          "arguments": {
+            "reference": "BUG-601"
+          },
+          "data": {
+            "issue_id": "BUG-601",
+            "operation": "inclusive_sum",
+            "buggy_expression": "n * (n - 1) // 2",
+            "maximum_n": 10
+          },
+          "content": "{\"buggy_expression\":\"n * (n - 1) // 2\",\"issue_id\":\"BUG-601\",\"maximum_n\":10,\"operation\":\"inclusive_sum\"}",
+          "sandbox": true
+        }
+      ],
+      "error": "ToolError: Duplicate call: code_read with these arguments already returned obs-1. Use that observation and call a different tool or finish. | rejected step: {\"action\":null,\"citations\":[],\"findings\":[],\"kind\":\"tool\",\"status\":null,\"summary\":\"\",\"tool\":{\"arguments\":{\"reference\":\"BUG-601\"},\"name\":\"code_read\"}}",
+      "repairs": 3,
+      "repair_log": [
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: code_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: code_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        },
+        {
+          "node": "tool",
+          "error": "ToolError: Duplicate call: code_read with these arguments already returned obs-1. Use that observation and call a different tool or finish."
+        }
+      ],
+      "approval_request": null,
+      "executed": false,
+      "model_calls": 4,
+      "schema": "AgentStep",
+      "step_schemas": [
+        "AgentStep",
+        "AgentStep",
+        "AgentStep",
+        "AgentStep"
+      ],
+      "denied_tool_calls": [
+        {
+          "tool": "code_read",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "code_read",
+          "reason": "duplicate"
+        },
+        {
+          "tool": "code_read",
+          "reason": "duplicate"
+        }
+      ],
+      "failure_category": "duplicate_tool_loop",
+      "wall_sec": 4.62,
+      "duplicate_calls": 0,
+      "call_records": [
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "evaluation": {
+      "ok": false,
+      "checks": {
+        "status": false,
+        "action": false,
+        "no_runtime_error": false,
+        "no_external_execution": true,
+        "required_tools": false,
+        "finding:tests_passed": false,
+        "finding:operation": false,
+        "provenance:tests_passed": false,
+        "provenance:operation": false,
+        "candidate_passed": false,
+        "patch_domain_correct": false
+      },
+      "expected_findings": {
+        "tests_passed": true,
+        "operation": "inclusive_sum"
+      },
+      "failure_category": "duplicate_tool_loop"
+    }
+  }
+]

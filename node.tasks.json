@@ -1,0 +1,2418 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "template_type": "project_task_template",
+  "version": "3.3",
+  "description": "Hexagonal DDD atomic-unit project template. The task graph and the path graph are two views of the same architecture. Task dependency edges follow the same directional rules as the hexagonal rings. Each task delivers one atomic unit folder. Use this template to plan your own system or adapt it for any project. Adapted for a Python package: an atomic unit is one module (implementation) plus the tests that pin its contract; schema contracts are pydantic models.",
+  "enums": {
+    "status": [
+      "Not Started",
+      "In Progress",
+      "Blocked",
+      "In Review",
+      "Done",
+      "Cancelled"
+    ],
+    "project_status": [
+      "Not Started",
+      "Planning",
+      "In Progress",
+      "On Hold",
+      "Completed",
+      "Cancelled"
+    ],
+    "priority": [
+      "Critical",
+      "High",
+      "Medium",
+      "Low"
+    ],
+    "complexity": [
+      "Very Low",
+      "Low",
+      "Medium",
+      "High",
+      "Very High"
+    ],
+    "dependency_type": [
+      "FS",
+      "SS",
+      "FF",
+      "SF"
+    ],
+    "risk_probability": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "risk_impact": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_score": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_status": [
+      "Open",
+      "Mitigated",
+      "Closed"
+    ],
+    "change_status": [
+      "Pending",
+      "Approved",
+      "Rejected"
+    ],
+    "milestone_status": [
+      "Not Started",
+      "In Progress",
+      "Achieved",
+      "Missed"
+    ],
+    "sprint_status": [
+      "Not Started",
+      "Active",
+      "Completed"
+    ],
+    "worker_role": [
+      "Project Manager",
+      "Developer",
+      "Designer",
+      "QA Engineer",
+      "DevOps",
+      "Business Analyst",
+      "Stakeholder",
+      "Other"
+    ],
+    "unit_kind": [
+      "unit",
+      "organ",
+      "registry",
+      "gateway"
+    ],
+    "interface_type": [
+      "api",
+      "cli",
+      "ui",
+      "internal"
+    ],
+    "transport_type": [
+      "function",
+      "http",
+      "cli",
+      "ipc"
+    ],
+    "unit_status": [
+      "planned",
+      "active_development",
+      "stable",
+      "deprecated"
+    ],
+    "hex_ring": [
+      "core/domain",
+      "core/ports",
+      "infrastructure/adapters",
+      "infrastructure/tools",
+      "application/services",
+      "application/agents",
+      "gateway/cli",
+      "ui",
+      "workflows"
+    ],
+    "unit_slot_role": [
+      "contract",
+      "manifest",
+      "implementation",
+      "tests",
+      "state",
+      "prompt",
+      "ui-companion",
+      "registry"
+    ],
+    "verification_requires": [
+      "local",
+      "colab_t4",
+      "api_keys",
+      "owner"
+    ]
+  },
+  "project": {
+    "name": "TAGO v3.8 — T4 Agent Graph Orchestrator",
+    "description": "Prepare v3.8 from the v3.7 evaluation: fix the failures seen in the real Colab T4 run, make the notebook explain every step, add model/API comparison, and publish on GitHub with verifiable results.",
+    "start_date": "2026-11-23",
+    "end_date": "2026-12-14",
+    "status": "In Progress",
+    "timezone": "America/Santiago",
+    "currency": "USD",
+    "budget": 0,
+    "budget_spent": 0,
+    "graph_end": {
+      "mode": "handoff",
+      "summary": "v3.8 is complete when every task in all four graphs is Done and the gate passes: tests green, notebook in sync, graphs valid, every Done task re-verified, and real T4 measurements committed.",
+      "next_step": "Start the v3.9 graph from docs/v39_plan.md.",
+      "next_graph": "v3.9 graph (created by root task 11)",
+      "success_signal": "python -m tago tasks gate exits 0.",
+      "owner": "Project Owner",
+      "maintenance_rhythm": "Update node.tasks.json in the same commit as the work; CI runs tasks validate.",
+      "verification": {
+        "strategy": "command",
+        "commands": [
+          "python -m pytest -q",
+          "python tools/build_notebook.py --check",
+          "python -m tago tasks validate",
+          "python -m tago tasks verify",
+          "python -m tago results check results/v38_4_colab_t4_qwen2.5-7b --synthetic"
+        ]
+      }
+    },
+    "project_manager": {
+      "name": "Project Owner",
+      "email": "owner@example.com"
+    },
+    "stakeholders": [
+      {
+        "name": "Project Owner",
+        "email": "owner@example.com",
+        "role": "Stakeholder"
+      }
+    ],
+    "tags": [
+      "tago",
+      "llm-agents",
+      "evaluation",
+      "colab",
+      "hexagonal-ddd"
+    ],
+    "milestones": [
+      {
+        "name": "v3.8 code complete (offline-verified)",
+        "due_date": "2026-11-23",
+        "description": "Package, notebook, tests, docs",
+        "status": "Achieved",
+        "linked_task_names": [
+          "Build the v3.8 tago package (see tago/node.tasks.json)",
+          "Offline test suite and continuous integration",
+          "README, licence and packaging for GitHub"
+        ]
+      },
+      {
+        "name": "First v3.8 real measurement",
+        "due_date": "2026-11-30",
+        "description": "Colab T4 run committed",
+        "status": "Not Started",
+        "linked_task_names": [
+          "Live evaluation campaign (see results/node.tasks.json)"
+        ]
+      },
+      {
+        "name": "Public release",
+        "due_date": "2026-12-14",
+        "description": "GitHub repo with measured results",
+        "status": "Not Started",
+        "linked_task_names": [
+          "Publish to GitHub: create the repo, replace OWNER/REPO in the Colab badge, push, CI green",
+          "Replace predictions with measurements in README and notebook 11.5"
+        ]
+      }
+    ],
+    "sprints": [
+      {
+        "name": "Sprint 1 — v3.8 build",
+        "start_date": "2026-11-23",
+        "end_date": "2026-11-23",
+        "goal": "Analysis, package, notebook, tests, docs",
+        "status": "Completed"
+      },
+      {
+        "name": "Sprint 2 — measurement and publication",
+        "start_date": "2026-11-24",
+        "end_date": "2026-12-14",
+        "goal": "Colab/API runs, publish to GitHub, v3.9 plan",
+        "status": "Active"
+      }
+    ],
+    "risks": [
+      {
+        "name": "Hypotheses mistaken for results",
+        "description": "Readers could take section 11.5 predictions as measurements",
+        "probability": "Medium",
+        "impact": "High",
+        "score": "High",
+        "mitigation_plan": "Predictions are labelled; real numbers come only from results/ via generated tables pinned by tests",
+        "owner": "Project Owner",
+        "status": "Mitigated"
+      },
+      {
+        "name": "Ollama grammar does not enforce anyOf/$ref as expected",
+        "description": "If the server ignores parts of the schema, argument errors could reappear",
+        "probability": "Low",
+        "impact": "High",
+        "score": "Medium",
+        "mitigation_plan": "Outputs are still validated locally; results task 1 checks for tool_argument_schema failures",
+        "owner": "Project Owner",
+        "status": "Open"
+      }
+    ],
+    "change_log": [],
+    "closure": {
+      "actual_end_date": null,
+      "delivered_on_time": null,
+      "delivered_on_budget": null,
+      "lessons_learned": [],
+      "sign_off_by": null,
+      "sign_off_date": null
+    }
+  },
+  "project_structure": {
+    "root": ".",
+    "architecture": "hexagonal-ddd",
+    "architecture_guide": {
+      "concept": "A project is a graph of atomic units arranged in hexagonal rings. Ring 0 is the innermost layer (core domain). Each outer ring may depend on inner rings but inner rings never depend on outer rings. The task graph mirrors the ring structure exactly: task A depends on task B when the unit delivered by A lives in a ring that depends on B's ring.",
+      "rings": [
+        {
+          "ring": 0,
+          "layer": "core/domain",
+          "rule": "Zero tago imports. Step contract, typed worlds, E06 arithmetic rule."
+        },
+        {
+          "ring": 1,
+          "layer": "core/ports",
+          "rule": "Imports domain only. ChatBackend/ToolHost ports and composition registries."
+        },
+        {
+          "ring": 2,
+          "layer": "infrastructure/adapters",
+          "rule": "Implements ports: model profiles, token preflight, Ollama/OpenAI/Anthropic/scripted backends."
+        },
+        {
+          "ring": 2,
+          "layer": "infrastructure/tools",
+          "rule": "Sandbox tools, registry, per-case host. Registers itself into port registries."
+        },
+        {
+          "ring": 2,
+          "layer": "application/services",
+          "rule": "Packs, orchestrator, evaluation, synthetic agents. Imports core + config only."
+        },
+        {
+          "ring": 3,
+          "layer": "gateway/cli",
+          "rule": "python -m tago: tests, analysis, live runs, task-graph validation."
+        },
+        {
+          "ring": 3,
+          "layer": "ui",
+          "rule": "The generated Colab notebook (notebooks/)."
+        },
+        {
+          "ring": 4,
+          "layer": "workflows",
+          "rule": "Experiments, analysis, offline contract suite. May import every inner ring."
+        }
+      ],
+      "atomic_unit_contract": {
+        "description": "Python adaptation: a unit is one module with `# %% cell:` sections (implementation) and the tests that pin its contract.",
+        "required_slots": {
+          "<module>.py": "Implementation with notebook cell markers",
+          "tests/test_*.py or workflows/contracts.py": "Contract tests"
+        },
+        "optional_slots": {
+          "docstring": "Unit documentation"
+        },
+        "registry_rule": "Every unit is listed in unit_registry with path, layer and status."
+      }
+    },
+    "dependency_rules": {
+      "core/domain": [],
+      "core/ports": [
+        "core/domain"
+      ],
+      "infrastructure/adapters": [
+        "core/domain",
+        "core/ports"
+      ],
+      "infrastructure/tools": [
+        "core/domain",
+        "core/ports"
+      ],
+      "application/services": [
+        "core/domain",
+        "core/ports"
+      ],
+      "gateway/cli": [
+        "workflows",
+        "application/services",
+        "infrastructure/adapters",
+        "infrastructure/tools"
+      ],
+      "ui": [
+        "workflows"
+      ],
+      "workflows": [
+        "application/services",
+        "infrastructure/adapters",
+        "infrastructure/tools",
+        "core/ports",
+        "core/domain"
+      ]
+    },
+    "atomic_unit_standard": {
+      "required_slots": [
+        "<module>.py",
+        "tests"
+      ],
+      "optional_slots": [
+        "docstring"
+      ],
+      "slot_roles": {
+        "<module>.py": "implementation",
+        "tests": "tests"
+      }
+    },
+    "path_graph": {
+      "nodes": [
+        {
+          "id": ".",
+          "type": "folder",
+          "layer": "root",
+          "label": "Repository root",
+          "path": "."
+        },
+        {
+          "id": "node.tasks.json",
+          "type": "file",
+          "layer": "root",
+          "label": "Root task graph",
+          "path": "node.tasks.json"
+        },
+        {
+          "id": "tago",
+          "type": "folder",
+          "layer": "root",
+          "label": "Package (sub-graph tago/node.tasks.json)",
+          "path": "tago"
+        },
+        {
+          "id": "notebooks",
+          "type": "folder",
+          "layer": "ui",
+          "label": "Notebook (sub-graph notebooks/node.tasks.json)",
+          "path": "notebooks"
+        },
+        {
+          "id": "results",
+          "type": "folder",
+          "layer": "workflows",
+          "label": "Run artifacts (sub-graph results/node.tasks.json)",
+          "path": "results"
+        },
+        {
+          "id": "tests",
+          "type": "folder",
+          "layer": "root",
+          "label": "Test suite",
+          "path": "tests"
+        },
+        {
+          "id": "docs",
+          "type": "folder",
+          "layer": "root",
+          "label": "Review and reports",
+          "path": "docs"
+        },
+        {
+          "id": "tools",
+          "type": "folder",
+          "layer": "gateway/cli",
+          "label": "Notebook generator",
+          "path": "tools"
+        }
+      ],
+      "edges": [
+        {
+          "from": ".",
+          "to": "node.tasks.json",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "tago",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "notebooks",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "results",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "tests",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "docs",
+          "role": "contains"
+        },
+        {
+          "from": ".",
+          "to": "tools",
+          "role": "contains"
+        },
+        {
+          "from": "notebooks",
+          "to": "tago",
+          "role": "generated_from"
+        },
+        {
+          "from": "tests",
+          "to": "tago",
+          "role": "depends_on"
+        },
+        {
+          "from": "docs",
+          "to": "results",
+          "role": "generated_from"
+        }
+      ]
+    }
+  },
+  "unit_registry": [
+    {
+      "name": "sub.tago",
+      "path": "tago",
+      "kind": "organ",
+      "layer": "workflows",
+      "interface_type": "cli",
+      "transport": "cli",
+      "status": "stable",
+      "depends_on": [],
+      "files": [
+        "node.tasks.json"
+      ]
+    },
+    {
+      "name": "sub.notebooks",
+      "path": "notebooks",
+      "kind": "organ",
+      "layer": "ui",
+      "interface_type": "ui",
+      "transport": "function",
+      "status": "active_development",
+      "depends_on": [
+        {
+          "unit": "sub.tago",
+          "role": "generated_from"
+        }
+      ],
+      "files": [
+        "node.tasks.json"
+      ]
+    },
+    {
+      "name": "sub.results",
+      "path": "results",
+      "kind": "registry",
+      "layer": "workflows",
+      "interface_type": "internal",
+      "transport": "function",
+      "status": "active_development",
+      "depends_on": [
+        {
+          "unit": "sub.notebooks",
+          "role": "produced_by"
+        }
+      ],
+      "files": [
+        "node.tasks.json"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "Analysis",
+      "description": "Review and planning",
+      "parent_category_name": null
+    },
+    {
+      "name": "Package",
+      "description": "tago/",
+      "parent_category_name": null
+    },
+    {
+      "name": "Notebook",
+      "description": "notebooks/",
+      "parent_category_name": null
+    },
+    {
+      "name": "Quality",
+      "description": "Tests and CI",
+      "parent_category_name": null
+    },
+    {
+      "name": "Publication",
+      "description": "README, licence, GitHub",
+      "parent_category_name": null
+    },
+    {
+      "name": "Evaluation",
+      "description": "Live measurements",
+      "parent_category_name": null
+    }
+  ],
+  "workers": [
+    {
+      "name": "Project Owner",
+      "email": "owner@example.com",
+      "role": "Project Manager",
+      "worker_id": "project-owner",
+      "skills": [
+        "Colab runs",
+        "API keys",
+        "GitHub publishing",
+        "Product decisions"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 10,
+      "timezone": "America/Santiago"
+    },
+    {
+      "name": "Claude (AI assistant)",
+      "email": "noreply@anthropic.com",
+      "role": "Developer",
+      "worker_id": "claude-assistant",
+      "skills": [
+        "Python",
+        "Evaluation design",
+        "Testing",
+        "Documentation"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 40,
+      "timezone": "UTC"
+    }
+  ],
+  "tasks": [
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v37_colab_t4_qwen2.5-7b"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v37_colab_t4_qwen2.5-7b"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v37_artifact.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Analysis of the real artifact is pinned by tests (0/3, 13 calls, 119 s cold start, categories)."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 1,
+      "task_name": "Analyse v3.7 code, notebook and the real Colab T4 run",
+      "description": "Read all 132 notebook cells, PROJECT_SPEC.md, the legacy v3.1-v3.6 notebooks and the only real artifact (.legacy/golden-1509ee...). Copied the artifact unchanged to results/v37_colab_t4_qwen2.5-7b/. Finding: 0/3 golden passed, all quarantined on tool-argument errors; synthetic never ran."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['Root causes','I-01','I-18','What is still unknown'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Review contains root causes and the full issue table."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 1,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 2,
+      "task_name": "Write the v3.7 critique and v3.8 plan",
+      "description": "docs/v38_review.md: strengths, real results, 5 root causes, 18 issues with severity and v3.8 status, what remains unknown."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Package",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tago"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Sub-graph closed and full test suite passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [
+        {
+          "type": "subgraph",
+          "path": "tago/node.tasks.json",
+          "label": "Package sub-graph"
+        }
+      ],
+      "comments": [],
+      "task_id": 3,
+      "task_name": "Build the v3.8 tago package (see tago/node.tasks.json)",
+      "description": "Package refactor with all v3.8 fixes; tracked in its own sub-graph."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Notebook",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "notebooks"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "notebooks"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python tools/build_notebook.py --check",
+          "python -m pytest -q tests/test_notebook.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Notebook in sync, explained and executable; Colab T4 runs committed."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [
+        {
+          "type": "subgraph",
+          "path": "notebooks/node.tasks.json",
+          "label": "Notebook sub-graph"
+        }
+      ],
+      "comments": [],
+      "task_id": 4,
+      "task_name": "Generate the explained Colab notebook (see notebooks/node.tasks.json)",
+      "description": "Generated notebook with per-step explanations; the final sub-task needs a real Colab T4 run."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Quality",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tests",
+        ".github/workflows/ci.yml"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tests",
+          ".github/workflows/ci.yml"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q"
+        ],
+        "expected_outputs": [],
+        "success_signal": "All tests pass locally; CI file present."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 5,
+      "task_name": "Offline test suite and continuous integration",
+      "description": "pytest (contracts, v3.7 artifact, architecture, docs, notebook, HTTP end-to-end) and .github/workflows/ci.yml (Python 3.11/3.12: pytest, notebook --check, tasks validate)."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Publication",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "README.md",
+        "LICENSE",
+        "pyproject.toml",
+        ".gitignore"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "README.md",
+          "LICENSE",
+          "pyproject.toml",
+          ".gitignore"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_docs.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "README table equals the artifact analysis; links resolve; packaging metadata, licence and CI present."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 5,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 6,
+      "task_name": "README, licence and packaging for GitHub",
+      "description": "README explains TAGO, the graph, real vs expected results (generated table verified by test), quick starts for Colab/local/API, layout and definition of done. pyproject.toml, MIT LICENSE, .gitignore."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Medium",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Publication",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": []
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;assert 'TAGO-DECISIONS-CONFIRMED' in pathlib.Path('README.md').read_text(encoding='utf-8')\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "README carries the confirmation marker."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 6,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 7,
+      "task_name": "Confirm the MIT licence",
+      "description": "The acronym is settled as T4 Agent Graph Orchestrator (README, notebook, pyproject and docs updated). The MIT licence was confirmed by the maintainer on 2026-11-24 and README.md carries the marker comment <!-- TAGO-DECISIONS-CONFIRMED -->."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-26",
+      "due_date": "2026-11-26",
+      "priority": "High",
+      "status": "Not Started",
+      "progress_percentage": 0,
+      "estimated_hours": 1,
+      "actual_hours": 0,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Publication",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": []
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "owner",
+        "commands": [
+          "python -c \"import pathlib;assert 'OWNER/REPO' not in pathlib.Path('README.md').read_text(encoding='utf-8')\"",
+          "git ls-remote --exit-code origin HEAD"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Badge points to the real repo and origin is reachable."
+      },
+      "assigned_workers": [
+        {
+          "name": "Project Owner",
+          "email": "owner@example.com",
+          "role": "Project Manager",
+          "worker_id": "project-owner"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 6,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 7,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 8,
+      "task_name": "Publish to GitHub: create the repo, replace OWNER/REPO in the Colab badge, push, CI green",
+      "description": "git init; git add .; git commit; gh repo create <name> --public --source . --push. Then replace OWNER/REPO in README and the CI badge. .legacy/ stays ignored."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-12-10",
+      "due_date": "2026-12-10",
+      "priority": "Critical",
+      "status": "In Progress",
+      "progress_percentage": 80,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Evaluation",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": []
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "colab_t4",
+        "commands": [
+          "python -m tago results check results/v38_4_colab_t4_qwen2.5-7b --synthetic"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Results sub-graph closed."
+      },
+      "assigned_workers": [
+        {
+          "name": "Project Owner",
+          "email": "owner@example.com",
+          "role": "Project Manager",
+          "worker_id": "project-owner"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 4,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [
+        {
+          "type": "subgraph",
+          "path": "results/node.tasks.json",
+          "label": "Results sub-graph"
+        }
+      ],
+      "comments": [],
+      "task_id": 9,
+      "task_name": "Live evaluation campaign (see results/node.tasks.json)",
+      "description": "T4 measurement of v3.8: Runs A-F, ablation ladder, local and thinking models and the auditor study are done; the scaled synthetic set (results task 5) is the one measurement left."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Publication",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": []
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;t=pathlib.Path('README.md').read_text(encoding='utf-8');assert all('<!-- BEGIN GENERATED: %s -->' % k in t for k in ['v37-results','v384-results','v384-campaign'])\"",
+          "python -m pytest -q tests/test_docs.py tests/test_v384_campaign_artifact.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "README shows generated results that match committed artifacts and a scored prediction table."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 10,
+      "task_name": "Replace predictions with measurements in README and notebook 11.5",
+      "description": "Done: README and notebook 11.4/11.5 hold generated result blocks for Runs A-F (checked against the artifacts by tests/test_docs.py) and a scorecard marking every Run E and Run F prediction confirmed, partly confirmed, falsified or not decided. Rows that need the scale campaign or API models stay labelled open."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Medium",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": []
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;t=pathlib.Path('docs/v39_plan.md').read_text(encoding='utf-8');assert all(k in t for k in ['Scale campaign','N-27','V39-02'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "v3.9 plan exists and cites measured findings."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 10,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-10 Repair message for arithmetic loops",
+          "description": "Run F N-27: 3B, 14B and llama3.1:8b loop on code_check after a near miss. Show the failing check result and the expected values in the repair message; keep only if the scale campaign shows a gain."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-07 Long-run context-drift measurement",
+          "description": "External review claim: small models degrade as tool history grows. Not supported at 1.1-1.6k tokens; measure on workflows with >=8 tool calls (E05, E10) and record prompt_tokens vs failure category."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-09 Diagnose the slow first request",
+          "description": "The warm-up took 168 s of which 75.6 s was model load; the chat call absorbed about 92 s. Capture ollama ps and the server log around the first chat request to find the cause (KV-cache allocation or grammar compilation)."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-08 Citation matching policy",
+          "description": "Strict case-sensitive provenance is kept (whitespace-insensitive since v3.8.2). Decide whether a field-level matcher (finding value inside the cited observation) is a better oracle than free quotes; ties to V39-02."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-01 E09 alert_read should not reveal sensitive_asset",
+          "description": "Review I-12. Change only with a re-baseline, since it changes task difficulty."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-02 Citation quotes must contain the finding value",
+          "description": "Review I-13: today any >=2 character substring passes."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-03 Use a different auditor model family",
+          "description": "Review I-15: reduce correlated generator/auditor/worker errors."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-04 OpenAI strict structured outputs (schema transform)",
+          "description": "Review I-16."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-05 Human-approval resume path",
+          "description": "Review I-17: PENDING_APPROVAL -> approve/reject -> continue."
+        },
+        {
+          "start_date": "2026-11-23",
+          "end_date": "2026-11-23",
+          "due_date": "2026-11-23",
+          "priority": "Medium",
+          "status": "Not Started",
+          "progress_percentage": 0,
+          "estimated_hours": 1,
+          "actual_hours": 0,
+          "complexity": "Medium",
+          "category_name": "",
+          "subcategory_name": "",
+          "target_unit": "",
+          "path_node_id": "",
+          "unit_bindings": null,
+          "tags": [],
+          "related_paths": [],
+          "execution_context": null,
+          "verification": null,
+          "assigned_workers": [],
+          "acceptance_criteria": [],
+          "dependencies": [],
+          "subtasks": [],
+          "attachments": [],
+          "links": [],
+          "comments": [],
+          "task_name": "V39-06 MCP tool-host adapter behind the ToolHost port",
+          "description": "Optional: real transport for tools."
+        }
+      ],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 11,
+      "task_name": "Plan v3.9 from v3.8 measurements",
+      "description": "Done: docs/v39_plan.md orders the backlog by the measured failure categories (scale campaign, E06 arithmetic loops, evidence relevance, auditor at scale, long tool histories)."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_1_colab_t4_qwen2.5-7b",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_1_colab_t4_qwen2.5-7b",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v381_artifact.py",
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['N-01','N-09','Assessment of an external review'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Analysis pinned by tests; review document contains N-01..N-09 and the assessment."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 12,
+      "task_name": "Analyse the real v3.8.1 Colab T4 run and check the external review against it",
+      "description": "The generated notebook was run on a T4 and the artifacts were committed. Result 0/3 golden and 0/3 synthetic reaching a final, but a different failure mix than v3.7: zero tool-argument errors; envelope failures, repeated reads, a copied schema description, a paraphrased citation, weak synthetic cases, a context-size reload. docs/v38_review.md section 6 scores the earlier predictions and each claim of the pasted review."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Package",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tago",
+        "tago/node.tasks.json"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago",
+          "tago/node.tasks.json"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Full suite passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 12,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 13,
+      "task_name": "Fix every issue found in the v3.8.1 run (v3.8.2, prompt v38.2) — see tago/node.tasks.json tasks 10-12",
+      "description": "State-conditioned step schema, schema-text leak removed, generator redraft with feedback, reference normalisation, citation hints, warm-up context, candidate model profiles and a tolerant matrix. All pinned by tests that replay the real raw outputs. NOT yet measured on a GPU (results task 1)."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_2_colab_t4_qwen2.5-7b",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_2_colab_t4_qwen2.5-7b",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v382_artifact.py",
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['N-10','N-15','Scorecard of the v3.8.2 predictions'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Analysis pinned by tests; review document contains N-10..N-15 and the scorecard."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 13,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 14,
+      "task_name": "Analyse the real v3.8.2 Colab T4 run (Run C) and score the v3.8.2 predictions",
+      "description": "Result 0/3 golden (9 of 9 finals refused for quote formatting), 6 of 6 synthetic cases reached the orchestrator, none passed. Findings N-10..N-15 in docs/v38_review.md section 7; scorecard in notebook 11.5. Pinned by tests/test_v382_artifact.py."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Package",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tago",
+        "tago/node.tasks.json"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago",
+          "tago/node.tasks.json"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Full suite passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 14,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 15,
+      "task_name": "Fix the Run C findings (v3.8.3, prompt v38.3) — see tago/node.tasks.json tasks 13-16",
+      "description": "Grounded quotes, token preflight fix, deterministic synthetic validation, chat warm-up, clearer arithmetic error. All pinned by tests. NOT yet measured on a GPU (results task 1)."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Publication",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "README.md",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "notebooks/narrative.md",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "README.md",
+          "CHANGELOG.md",
+          "CONTRIBUTING.md",
+          "notebooks/narrative.md",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;ts=[pathlib.Path(x).read_text(encoding='utf-8') for x in ['README.md','notebooks/narrative.md','docs/v38_review.md']];assert not any('project owner' in t or 'as stated by' in t for t in ts);assert pathlib.Path('CHANGELOG.md').exists() and pathlib.Path('CONTRIBUTING.md').exists()\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "No working-session wording remains; changelog and contribution guide exist."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 14,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 16,
+      "task_name": "Production wording and educational documentation",
+      "description": "Removed working-session wording from the notebook, README, docs and results READMEs; README gained a concepts glossary, a failure-category reference and the three-run comparison; CHANGELOG.md and CONTRIBUTING.md added."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_3_colab_t4_qwen2.5-7b",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_3_colab_t4_qwen2.5-7b",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v383_artifact.py",
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['N-17','N-22','Scorecard of the v3.8.3 predictions'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Analysis pinned by tests; review contains N-17..N-22 and the scorecard."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 16,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 17,
+      "task_name": "Analyse the real v3.8.3 Colab T4 run (Run D) and score the v3.8.3 predictions",
+      "description": "Golden 2/3 (first passes), synthetic 4/6. Findings N-17..N-22 in docs/v38_review.md section 8; scorecard in notebook 11.5. Pinned by tests/test_v383_artifact.py."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Package",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tago",
+        "tago/node.tasks.json"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tago",
+          "tago/node.tasks.json"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Full suite passes."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 17,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 18,
+      "task_name": "Fix the Run D findings (v3.8.4, prompt v38.4) — see tago/node.tasks.json tasks 17-18",
+      "description": "One citation per observation, reference candidates, tool-argument text; the expired Hugging Face token no longer stops the run (load_public_model). All pinned by tests and measured in Run E (results task 13)."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "Analysis",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_4_colab_t4_qwen2.5-7b",
+        "docs/v38_review.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_4_colab_t4_qwen2.5-7b",
+          "docs/v38_review.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_v384_artifact.py",
+          "python -c \"import pathlib;t=pathlib.Path('docs/v38_review.md').read_text(encoding='utf-8');assert all(k in t for k in ['N-23','N-25','The v3.8.4 run (Run E)'])\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "Analysis pinned by tests; review contains N-23..N-25."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 18,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 19,
+      "task_name": "Analyse the real v3.8.4 Colab T4 run (Run E) and score the v3.8.4 predictions",
+      "description": "Golden 3/3, synthetic 5/6. Findings N-23..N-25 in docs/v38_review.md section 9; scorecard in notebook 11.5. The remaining synthetic failure (E06 noisy) is documented as a 7B arithmetic limit, not a schema fault. Pinned by tests/test_v384_artifact.py."
+    }
+  ],
+  "required_fields": [
+    "project.name",
+    "project.start_date",
+    "project.end_date",
+    "project.status",
+    "project.timezone",
+    "project.currency",
+    "project.project_manager",
+    "tasks[].task_id",
+    "tasks[].task_name",
+    "tasks[].start_date",
+    "tasks[].end_date",
+    "tasks[].due_date",
+    "tasks[].priority",
+    "tasks[].status",
+    "tasks[].progress_percentage"
+  ],
+  "optional_fields": [
+    "project.description",
+    "project.budget",
+    "project.budget_spent",
+    "project.stakeholders",
+    "project.tags",
+    "project.milestones",
+    "project.sprints",
+    "project.risks",
+    "project.change_log",
+    "project.closure",
+    "project_structure",
+    "unit_registry",
+    "tasks[].description",
+    "tasks[].acceptance_criteria",
+    "tasks[].category_name",
+    "tasks[].subcategory_name",
+    "tasks[].target_unit",
+    "tasks[].path_node_id",
+    "tasks[].unit_bindings",
+    "tasks[].sprint_name",
+    "tasks[].complexity",
+    "tasks[].blocker_reason",
+    "tasks[].estimated_hours",
+    "tasks[].actual_hours",
+    "tasks[].is_critical_path",
+    "tasks[].tags",
+    "tasks[].related_paths",
+    "tasks[].execution_context",
+    "tasks[].verification",
+    "tasks[].assigned_workers",
+    "tasks[].reviewer",
+    "tasks[].dependencies",
+    "tasks[].subtasks",
+    "tasks[].attachments",
+    "tasks[].links",
+    "tasks[].comments",
+    "categories",
+    "workers",
+    "project.parent_graph",
+    "tasks[].verification.requires"
+  ],
+  "navigation": {
+    "rootModule": "node.tasks.json",
+    "modules": [
+      {
+        "path": "node.tasks.json",
+        "label": "TAGO v3.8",
+        "name": "TAGO v3.8",
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      {
+        "path": "tago/node.tasks.json",
+        "label": "Package",
+        "name": "Package",
+        "parentTaskId": 3,
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      {
+        "path": "notebooks/node.tasks.json",
+        "label": "Notebook",
+        "name": "Notebook",
+        "parentTaskId": 4,
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "path": "results/node.tasks.json",
+        "label": "Results",
+        "name": "Results",
+        "parentTaskId": 9,
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      }
+    ]
+  }
+}

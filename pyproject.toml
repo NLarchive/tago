@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tago"
+version = "3.8.0"
+description = "TAGO (T4 Agent Graph Orchestrator): a sandboxed, evidence-graded evaluation lab for tool-using LLM agents on ten fictional enterprise workflows."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["pydantic>=2.10,<3", "requests>=2.31,<3"]
+
+[project.optional-dependencies]
+live = ["transformers>=4.45", "sentence-transformers>=3"]
+dev = ["pytest>=8", "nbformat>=5.9", "nbclient>=0.10", "ipykernel>=6"]
+
+[project.scripts]
+tago = "tago.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["tago*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

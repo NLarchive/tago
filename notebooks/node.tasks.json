@@ -1,0 +1,822 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "template_type": "project_task_template",
+  "version": "3.3",
+  "description": "Hexagonal DDD atomic-unit project template. The task graph and the path graph are two views of the same architecture. Task dependency edges follow the same directional rules as the hexagonal rings. Each task delivers one atomic unit folder. Use this template to plan your own system or adapt it for any project. Adapted for a Python package: an atomic unit is one module (implementation) plus the tests that pin its contract; schema contracts are pydantic models.",
+  "enums": {
+    "status": [
+      "Not Started",
+      "In Progress",
+      "Blocked",
+      "In Review",
+      "Done",
+      "Cancelled"
+    ],
+    "project_status": [
+      "Not Started",
+      "Planning",
+      "In Progress",
+      "On Hold",
+      "Completed",
+      "Cancelled"
+    ],
+    "priority": [
+      "Critical",
+      "High",
+      "Medium",
+      "Low"
+    ],
+    "complexity": [
+      "Very Low",
+      "Low",
+      "Medium",
+      "High",
+      "Very High"
+    ],
+    "dependency_type": [
+      "FS",
+      "SS",
+      "FF",
+      "SF"
+    ],
+    "risk_probability": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "risk_impact": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_score": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "risk_status": [
+      "Open",
+      "Mitigated",
+      "Closed"
+    ],
+    "change_status": [
+      "Pending",
+      "Approved",
+      "Rejected"
+    ],
+    "milestone_status": [
+      "Not Started",
+      "In Progress",
+      "Achieved",
+      "Missed"
+    ],
+    "sprint_status": [
+      "Not Started",
+      "Active",
+      "Completed"
+    ],
+    "worker_role": [
+      "Project Manager",
+      "Developer",
+      "Designer",
+      "QA Engineer",
+      "DevOps",
+      "Business Analyst",
+      "Stakeholder",
+      "Other"
+    ],
+    "unit_kind": [
+      "unit",
+      "organ",
+      "registry",
+      "gateway"
+    ],
+    "interface_type": [
+      "api",
+      "cli",
+      "ui",
+      "internal"
+    ],
+    "transport_type": [
+      "function",
+      "http",
+      "cli",
+      "ipc"
+    ],
+    "unit_status": [
+      "planned",
+      "active_development",
+      "stable",
+      "deprecated"
+    ],
+    "hex_ring": [
+      "core/domain",
+      "core/ports",
+      "infrastructure/adapters",
+      "infrastructure/tools",
+      "application/services",
+      "application/agents",
+      "gateway/cli",
+      "ui",
+      "workflows"
+    ],
+    "unit_slot_role": [
+      "contract",
+      "manifest",
+      "implementation",
+      "tests",
+      "state",
+      "prompt",
+      "ui-companion",
+      "registry"
+    ],
+    "verification_requires": [
+      "local",
+      "colab_t4",
+      "api_keys",
+      "owner"
+    ]
+  },
+  "project": {
+    "name": "TAGO v3.8 — Colab notebook",
+    "description": "Sub-graph of root task 4: the explained, generated, Colab T4-ready notebook.",
+    "start_date": "2026-11-23",
+    "end_date": "2026-11-30",
+    "status": "In Progress",
+    "timezone": "America/Santiago",
+    "currency": "USD",
+    "budget": 0,
+    "budget_spent": 0,
+    "graph_end": {
+      "mode": "handoff",
+      "summary": "Notebook is generated, explained, offline-executable and proven on a Colab T4.",
+      "next_step": "Live evaluation campaign (results/node.tasks.json).",
+      "next_graph": "results/node.tasks.json",
+      "success_signal": "build --check passes, headless execution passes, and a Colab T4 run folder is committed.",
+      "owner": "Project Owner",
+      "maintenance_rhythm": "Rebuild after every package change; CI fails on a stale notebook.",
+      "verification": {
+        "strategy": "command",
+        "commands": [
+          "python -m pytest -q",
+          "python tools/build_notebook.py --check",
+          "python -m tago tasks validate"
+        ]
+      }
+    },
+    "project_manager": {
+      "name": "Project Owner",
+      "email": "owner@example.com"
+    },
+    "stakeholders": [
+      {
+        "name": "Project Owner",
+        "email": "owner@example.com",
+        "role": "Stakeholder"
+      }
+    ],
+    "tags": [
+      "notebook",
+      "colab",
+      "t4"
+    ],
+    "milestones": [],
+    "sprints": [
+      {
+        "name": "Sprint 1 — v3.8 build",
+        "start_date": "2026-11-23",
+        "end_date": "2026-11-23",
+        "goal": "Analysis, package, notebook, tests, docs",
+        "status": "Completed"
+      },
+      {
+        "name": "Sprint 2 — measurement and publication",
+        "start_date": "2026-11-24",
+        "end_date": "2026-12-14",
+        "goal": "Colab/API runs, publish to GitHub, v3.9 plan",
+        "status": "Active"
+      }
+    ],
+    "risks": [],
+    "change_log": [],
+    "closure": {
+      "actual_end_date": null,
+      "delivered_on_time": null,
+      "delivered_on_budget": null,
+      "lessons_learned": [],
+      "sign_off_by": null,
+      "sign_off_date": null
+    },
+    "parent_graph": {
+      "path": "../node.tasks.json",
+      "task_id": 4
+    }
+  },
+  "project_structure": {
+    "root": "notebooks",
+    "architecture": "generated-artifact",
+    "path_graph": {
+      "nodes": [
+        {
+          "id": "notebooks/narrative.md",
+          "type": "file",
+          "layer": "ui",
+          "label": "Narrative source",
+          "path": "notebooks/narrative.md"
+        },
+        {
+          "id": "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb",
+          "type": "unit",
+          "layer": "ui",
+          "label": "Generated Colab notebook",
+          "path": "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb"
+        },
+        {
+          "id": "tools/build_notebook.py",
+          "type": "file",
+          "layer": "gateway/cli",
+          "label": "Generator",
+          "path": "tools/build_notebook.py"
+        }
+      ],
+      "edges": [
+        {
+          "from": "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb",
+          "to": "notebooks/narrative.md",
+          "role": "generated_from"
+        },
+        {
+          "from": "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb",
+          "to": "tago",
+          "role": "generated_from"
+        },
+        {
+          "from": "tools/build_notebook.py",
+          "to": "notebooks/narrative.md",
+          "role": "reads"
+        }
+      ]
+    }
+  },
+  "unit_registry": [
+    {
+      "name": "ui.notebook",
+      "path": "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb",
+      "kind": "unit",
+      "layer": "ui",
+      "interface_type": "ui",
+      "transport": "function",
+      "status": "active_development",
+      "depends_on": [
+        {
+          "unit": "workflows.experiments",
+          "role": "inlined"
+        }
+      ],
+      "files": [
+        "narrative.md",
+        "tago_v38_t4-agent_graph_orchestration.ipynb"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "UI",
+      "description": "Ring 3: generated notebook",
+      "parent_category_name": null
+    }
+  ],
+  "workers": [
+    {
+      "name": "Project Owner",
+      "email": "owner@example.com",
+      "role": "Project Manager",
+      "worker_id": "project-owner",
+      "skills": [
+        "Colab runs",
+        "API keys",
+        "GitHub publishing",
+        "Product decisions"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 10,
+      "timezone": "America/Santiago"
+    },
+    {
+      "name": "Claude (AI assistant)",
+      "email": "noreply@anthropic.com",
+      "role": "Developer",
+      "worker_id": "claude-assistant",
+      "skills": [
+        "Python",
+        "Evaluation design",
+        "Testing",
+        "Documentation"
+      ],
+      "hourly_rate": 0,
+      "weekly_capacity_hours": 40,
+      "timezone": "UTC"
+    }
+  ],
+  "tasks": [
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "notebooks/narrative.md"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "notebooks/narrative.md"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_notebook.py -k explained"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Every code cell is preceded by an explanation."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 1,
+      "task_name": "Write the notebook narrative with a \"what this does\" explanation before every code cell",
+      "description": "notebooks/narrative.md explains each step (what it does, why, what output to expect), defines TAGO, shows the generated v3.7 results table and the expected-vs-real hypotheses table."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tools/build_notebook.py",
+        "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tools/build_notebook.py",
+          "notebooks/tago_v38_t4-agent_graph_orchestration.ipynb"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python tools/build_notebook.py --check"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Committed notebook equals a fresh build."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 1,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 2,
+      "task_name": "Generate the notebook from the package (single source of truth)",
+      "description": "tools/build_notebook.py inlines package cells in narrative order, strips tago imports, refuses unused/duplicate cells, and has --check for CI (fixes I-08: hand-synced .ipynb/.py)."
+    },
+    {
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-23",
+      "due_date": "2026-11-23",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 1 — v3.8 build",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "tests/test_notebook.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "tests/test_notebook.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python -m pytest -q tests/test_notebook.py -k executes"
+        ],
+        "expected_outputs": [],
+        "success_signal": "The offline suite passes inside the notebook; no cell errors."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 3,
+      "task_name": "Execute the notebook headlessly offline without the package installed",
+      "description": "nbclient runs every cell with TAGO_RUN_LIVE=0 in an empty folder: proves the flattened notebook is self-contained and the offline suite passes inside it."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "Critical",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "results/v38_3_colab_t4_qwen2.5-7b"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "results/v38_3_colab_t4_qwen2.5-7b"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "colab_t4",
+        "commands": [
+          "python -m tago results check results/v38_3_colab_t4_qwen2.5-7b --synthetic"
+        ],
+        "expected_outputs": [],
+        "success_signal": "A golden folder with runtime.prompt_version=v38.3 plus a synthetic summary exists."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 3,
+          "type": "FS",
+          "lag_days": 0
+        },
+        {
+          "predecessor_task_id": 5,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 4,
+      "task_name": "Colab \"Run all\" on a real T4 completes end-to-end",
+      "description": "Upload notebooks/tago_v38_t4-agent_graph_orchestration.ipynb to Colab, T4 runtime, Run all. Done for v3.8.3 (Run D, committed under results/v38_3_colab_t4_qwen2.5-7b): the notebook ran end-to-end after the expired HF token was handled. The current code is v3.8.4; its run is results task 13."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [],
+      "related_paths": [
+        "notebooks/narrative.md",
+        "tools/build_notebook.py"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "notebooks/narrative.md",
+          "tools/build_notebook.py"
+        ]
+      },
+      "verification": {
+        "strategy": "test",
+        "requires": "local",
+        "commands": [
+          "python tools/build_notebook.py --check",
+          "python -m pytest -q tests/test_notebook.py"
+        ],
+        "expected_outputs": [],
+        "success_signal": "Notebook in sync; both results tables generated from results/."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [
+        {
+          "predecessor_task_id": 2,
+          "type": "FS",
+          "lag_days": 0
+        }
+      ],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 5,
+      "task_name": "Notebook documents the real v3.8.1 run: generated results block and the prediction scorecard",
+      "description": "narrative.md section 11.4 now shows runs A (v3.7) and B (v3.8.1) from committed artifacts; 11.5 scores the earlier predictions (2 confirmed, 2 falsified, 1 partly) and adds falsifiable v3.8.2 and model-matrix hypotheses; TAGO is defined as T4 Agent Graph Orchestrator; the file is renamed to tago_v38_t4-agent_graph_orchestration.ipynb."
+    },
+    {
+      "start_date": "2026-11-24",
+      "end_date": "2026-11-24",
+      "due_date": "2026-11-24",
+      "priority": "High",
+      "status": "Done",
+      "progress_percentage": 100,
+      "estimated_hours": 1,
+      "actual_hours": 1,
+      "complexity": "Medium",
+      "blocker_reason": "",
+      "sprint_name": "Sprint 2 — measurement and publication",
+      "reviewer": {
+        "name": "Project Owner",
+        "email": "owner@example.com"
+      },
+      "is_critical_path": true,
+      "category_name": "UI",
+      "subcategory_name": "",
+      "target_unit": "",
+      "path_node_id": "",
+      "unit_bindings": null,
+      "tags": [
+        "new-task"
+      ],
+      "related_paths": [
+        "notebooks"
+      ],
+      "execution_context": {
+        "mode": "standard",
+        "working_directory": ".",
+        "tools_required": [
+          "python"
+        ],
+        "output_artifacts": [
+          "notebooks"
+        ]
+      },
+      "verification": {
+        "strategy": "command",
+        "requires": "local",
+        "commands": [
+          "python -c \"import pathlib;p=pathlib.Path('notebooks/tago_v38_t4-agent_graph_orchestration.py');assert not p.exists() or 'quote_fragments' in p.read_text(encoding='utf-8')\""
+        ],
+        "expected_outputs": [],
+        "success_signal": "No stale export in the repository."
+      },
+      "assigned_workers": [
+        {
+          "name": "Claude (AI assistant)",
+          "email": "noreply@anthropic.com",
+          "role": "Developer",
+          "worker_id": "claude-assistant"
+        }
+      ],
+      "acceptance_criteria": [],
+      "dependencies": [],
+      "parent_task_id": 0,
+      "subtasks": [],
+      "attachments": [],
+      "links": [],
+      "comments": [],
+      "task_id": 6,
+      "task_name": "Remove or regenerate the stale Colab .py export",
+      "description": "notebooks/tago_v38_t4-agent_graph_orchestration.py on the authoring machine is an export of an older notebook and does not match the generated notebook. The repository contains no such file; the local copy was replaced by a generated export of the current notebook."
+    }
+  ],
+  "required_fields": [
+    "project.name",
+    "project.start_date",
+    "project.end_date",
+    "project.status",
+    "project.timezone",
+    "project.currency",
+    "project.project_manager",
+    "tasks[].task_id",
+    "tasks[].task_name",
+    "tasks[].start_date",
+    "tasks[].end_date",
+    "tasks[].due_date",
+    "tasks[].priority",
+    "tasks[].status",
+    "tasks[].progress_percentage"
+  ],
+  "optional_fields": [
+    "project.description",
+    "project.budget",
+    "project.budget_spent",
+    "project.stakeholders",
+    "project.tags",
+    "project.milestones",
+    "project.sprints",
+    "project.risks",
+    "project.change_log",
+    "project.closure",
+    "project_structure",
+    "unit_registry",
+    "tasks[].description",
+    "tasks[].acceptance_criteria",
+    "tasks[].category_name",
+    "tasks[].subcategory_name",
+    "tasks[].target_unit",
+    "tasks[].path_node_id",
+    "tasks[].unit_bindings",
+    "tasks[].sprint_name",
+    "tasks[].complexity",
+    "tasks[].blocker_reason",
+    "tasks[].estimated_hours",
+    "tasks[].actual_hours",
+    "tasks[].is_critical_path",
+    "tasks[].tags",
+    "tasks[].related_paths",
+    "tasks[].execution_context",
+    "tasks[].verification",
+    "tasks[].assigned_workers",
+    "tasks[].reviewer",
+    "tasks[].dependencies",
+    "tasks[].subtasks",
+    "tasks[].attachments",
+    "tasks[].links",
+    "tasks[].comments",
+    "categories",
+    "workers",
+    "project.parent_graph",
+    "tasks[].verification.requires"
+  ],
+  "navigation": {
+    "rootModule": "notebooks/node.tasks.json",
+    "modules": [
+      {
+        "path": "notebooks/node.tasks.json",
+        "label": "Notebook",
+        "name": "Notebook",
+        "taskIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ]
+  }
+}

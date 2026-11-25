@@ -1,0 +1,30 @@
+{
+  "plugin": "colab_ollama",
+  "url": "http://127.0.0.1:11434",
+  "gpu": "Tesla T4, 15360 MiB",
+  "pull_errors": {},
+  "ollama_version": "ollama version is 0.40.18",
+  "version": "3.8",
+  "prompt_version": "v38.4",
+  "model": "ministral-3:14b",
+  "provider": "ollama",
+  "warmup": {
+    "model": "ministral-3:14b",
+    "latency_sec": 38.5882598889998,
+    "load_sec": 37.21648369900004,
+    "chat_warmup_error": null
+  },
+  "base_seed": 3800,
+  "settings": {
+    "constrained_schema": true,
+    "guided_progress": true,
+    "state_conditioned": true,
+    "grounded_quotes": true,
+    "think": "default",
+    "generation_attempts": 3,
+    "max_repairs": 2,
+    "max_graph_steps": 24,
+    "retrieval": "hybrid",
+    "timeout_sec": 180
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "plugin": "colab_ollama",
+  "url": "http://127.0.0.1:11434",
+  "gpu": "Tesla T4, 15360 MiB",
+  "ollama_version": "ollama version is 0.40.17"
+}

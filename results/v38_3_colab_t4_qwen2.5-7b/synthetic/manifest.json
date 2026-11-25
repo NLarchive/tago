@@ -1,0 +1,233 @@
+{
+  "version": "3.8",
+  "prompt_version": "v38.3",
+  "base_seed": 3800,
+  "split": "evaluation",
+  "models": {
+    "generator": "qwen2.5:7b",
+    "auditor": "qwen2.5:7b",
+    "orchestrator": "qwen2.5:7b"
+  },
+  "retrieval": "hybrid",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "workflows": {
+    "E01": {
+      "objective": "Read the ticket and policy. Draft a refund escalation when above the self-service limit.",
+      "schema": {
+        "$defs": {
+          "SupportWorld": {
+            "additionalProperties": false,
+            "properties": {
+              "ticket_id": {
+                "maxLength": 40,
+                "minLength": 3,
+                "title": "Ticket Id",
+                "type": "string"
+              },
+              "customer_id": {
+                "maxLength": 40,
+                "minLength": 3,
+                "title": "Customer Id",
+                "type": "string"
+              },
+              "refund_cents": {
+                "exclusiveMinimum": 0,
+                "maximum": 1000000,
+                "title": "Refund Cents",
+                "type": "integer"
+              },
+              "self_service_limit_cents": {
+                "maximum": 1000000,
+                "minimum": 0,
+                "title": "Self Service Limit Cents",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "ticket_id",
+              "customer_id",
+              "refund_cents",
+              "self_service_limit_cents"
+            ],
+            "title": "SupportWorld",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "maxLength": 1500,
+            "minLength": 12,
+            "title": "Request",
+            "type": "string"
+          },
+          "world": {
+            "$ref": "#/$defs/SupportWorld"
+          }
+        },
+        "required": [
+          "request",
+          "world"
+        ],
+        "title": "E01Case",
+        "type": "object"
+      },
+      "required_tools": [
+        "ticket_read",
+        "retrieve"
+      ],
+      "finding_keys": [
+        "refund_cents",
+        "requires_approval"
+      ],
+      "action": "draft_refund",
+      "status": "PENDING_APPROVAL"
+    },
+    "E03": {
+      "objective": "Compare invoice quantities with received quantities and unit price. Draft the discrepancy for review.",
+      "schema": {
+        "$defs": {
+          "FinanceWorld": {
+            "additionalProperties": false,
+            "properties": {
+              "invoice_id": {
+                "maxLength": 40,
+                "minLength": 3,
+                "title": "Invoice Id",
+                "type": "string"
+              },
+              "billed_units": {
+                "exclusiveMinimum": 0,
+                "maximum": 10000,
+                "title": "Billed Units",
+                "type": "integer"
+              },
+              "received_units": {
+                "maximum": 10000,
+                "minimum": 0,
+                "title": "Received Units",
+                "type": "integer"
+              },
+              "unit_price_cents": {
+                "exclusiveMinimum": 0,
+                "maximum": 100000,
+                "title": "Unit Price Cents",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "invoice_id",
+              "billed_units",
+              "received_units",
+              "unit_price_cents"
+            ],
+            "title": "FinanceWorld",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "maxLength": 1500,
+            "minLength": 12,
+            "title": "Request",
+            "type": "string"
+          },
+          "world": {
+            "$ref": "#/$defs/FinanceWorld"
+          }
+        },
+        "required": [
+          "request",
+          "world"
+        ],
+        "title": "E03Case",
+        "type": "object"
+      },
+      "required_tools": [
+        "invoice_read",
+        "receipt_read",
+        "reconcile"
+      ],
+      "finding_keys": [
+        "overcharge_cents",
+        "payable_cents"
+      ],
+      "action": "draft_invoice_dispute",
+      "status": "PENDING_APPROVAL"
+    },
+    "E06": {
+      "objective": "Read the defective inclusive-sum expression. Propose a safe arithmetic replacement and run code_check before finalizing.",
+      "schema": {
+        "$defs": {
+          "EngineeringWorld": {
+            "additionalProperties": false,
+            "properties": {
+              "issue_id": {
+                "maxLength": 40,
+                "minLength": 3,
+                "title": "Issue Id",
+                "type": "string"
+              },
+              "operation": {
+                "const": "inclusive_sum",
+                "title": "Operation",
+                "type": "string"
+              },
+              "buggy_expression": {
+                "const": "n * (n - 1) // 2",
+                "title": "Buggy Expression",
+                "type": "string"
+              },
+              "maximum_n": {
+                "maximum": 100,
+                "minimum": 5,
+                "title": "Maximum N",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "issue_id",
+              "operation",
+              "buggy_expression",
+              "maximum_n"
+            ],
+            "title": "EngineeringWorld",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "maxLength": 1500,
+            "minLength": 12,
+            "title": "Request",
+            "type": "string"
+          },
+          "world": {
+            "$ref": "#/$defs/EngineeringWorld"
+          }
+        },
+        "required": [
+          "request",
+          "world"
+        ],
+        "title": "E06Case",
+        "type": "object"
+      },
+      "required_tools": [
+        "code_read",
+        "code_check"
+      ],
+      "finding_keys": [
+        "tests_passed",
+        "operation"
+      ],
+      "action": "propose_patch",
+      "status": "PROPOSED"
+    }
+  },
+  "n_clean": 1,
+  "n_noisy": 1,
+  "note": "Replay stored cases; provider seeds are best effort."
+}

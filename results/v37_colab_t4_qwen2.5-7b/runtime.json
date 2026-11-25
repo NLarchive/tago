@@ -1,0 +1,5 @@
+{
+  "plugin": "colab_ollama",
+  "url": "http://127.0.0.1:11434",
+  "ollama_version": "ollama version is 0.34.2"
+}

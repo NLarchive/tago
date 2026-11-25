@@ -1,0 +1,271 @@
+{
+  "version": "3.8",
+  "prompt_version": "v38.4",
+  "base_seed": 3800,
+  "main_model": "qwen2.5:7b",
+  "items": [
+    {
+      "name": "rung0-v37-behaviour",
+      "kind": "ablation",
+      "model": "qwen2.5:7b",
+      "think": "-",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-rung0-v37-behaviour-aea5721c8780",
+      "passed": 0,
+      "total": 3,
+      "failure_categories": {
+        "duplicate_tool_loop": 3
+      },
+      "first_call_sec": 2.31,
+      "minutes": 0.5,
+      "settings": {
+        "constrained_schema": false,
+        "guided_progress": false,
+        "state_conditioned": false,
+        "grounded_quotes": false
+      }
+    },
+    {
+      "name": "rung1-constrained-guided",
+      "kind": "ablation",
+      "model": "qwen2.5:7b",
+      "think": "-",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-rung1-constrained-guided-5966f92b9484",
+      "passed": 0,
+      "total": 3,
+      "failure_categories": {
+        "duplicate_tool_loop": 2,
+        "output_schema": 1
+      },
+      "first_call_sec": 2.51,
+      "minutes": 0.4,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": false,
+        "grounded_quotes": false
+      }
+    },
+    {
+      "name": "rung2-state-conditioned",
+      "kind": "ablation",
+      "model": "qwen2.5:7b",
+      "think": "-",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-rung2-state-conditioned-12e894a4a6e5",
+      "passed": 2,
+      "total": 3,
+      "failure_categories": {
+        "citation_grounding": 1
+      },
+      "first_call_sec": 1.46,
+      "minutes": 1.0,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": false
+      }
+    },
+    {
+      "name": "rung3-grounded-quotes",
+      "kind": "ablation",
+      "model": "qwen2.5:7b",
+      "think": "-",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-rung3-grounded-quotes-3b5101a69476",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 1.36,
+      "minutes": 0.7,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "auditor-granite4.1_8b",
+      "kind": "auditor",
+      "model": "generator/orchestrator qwen2.5:7b, auditor granite4.1:8b",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/synthetic-e58192abf631",
+      "passed": 4,
+      "total": 6,
+      "failure_categories": {
+        "tool_refused": 1,
+        "step_budget": 1
+      },
+      "minutes": 4.5
+    },
+    {
+      "name": "qwen2.5_3b",
+      "kind": "model",
+      "model": "qwen2.5:3b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-qwen2.5_3b-1014d82e8850",
+      "passed": 2,
+      "total": 3,
+      "failure_categories": {
+        "duplicate_tool_loop": 1
+      },
+      "first_call_sec": 0.71,
+      "minutes": 0.3,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "qwen2.5_14b",
+      "kind": "model",
+      "model": "qwen2.5:14b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-qwen2.5_14b-15bcc0341661",
+      "passed": 2,
+      "total": 3,
+      "failure_categories": {
+        "duplicate_tool_loop": 1
+      },
+      "first_call_sec": 2.86,
+      "minutes": 1.2,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "llama3.1_8b",
+      "kind": "model",
+      "model": "llama3.1:8b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-llama3.1_8b-b5a03cc0d4fe",
+      "passed": 1,
+      "total": 3,
+      "failure_categories": {
+        "missing_provenance": 1,
+        "duplicate_tool_loop": 1
+      },
+      "first_call_sec": 2.21,
+      "minutes": 0.7,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "granite4.1_8b",
+      "kind": "model",
+      "model": "granite4.1:8b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-granite4.1_8b-60bf04ccc285",
+      "passed": 2,
+      "total": 3,
+      "failure_categories": {
+        "missing_provenance": 1
+      },
+      "first_call_sec": 2.46,
+      "minutes": 0.9,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "ministral-3_14b",
+      "kind": "model",
+      "model": "ministral-3:14b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-ministral-3_14b-a5dc8475f141",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 3.86,
+      "minutes": 1.4,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "qwen3.5_9b-think-default",
+      "kind": "thinking",
+      "model": "qwen3.5:9b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-qwen3.5_9b-think-default-9639ae4d310b",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 8.44,
+      "minutes": 2.4,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "qwen3.5_9b-think-off",
+      "kind": "thinking",
+      "model": "qwen3.5:9b",
+      "think": "off",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-qwen3.5_9b-think-off-38cc2e67ab7a",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 1.95,
+      "minutes": 0.8,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "gemma4_12b-think-default",
+      "kind": "thinking",
+      "model": "gemma4:12b",
+      "think": "default",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-gemma4_12b-think-default-09c0b334ff76",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 5.56,
+      "minutes": 3.2,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    },
+    {
+      "name": "gemma4_12b-think-off",
+      "kind": "thinking",
+      "model": "gemma4:12b",
+      "think": "off",
+      "path": "/content/tago_v38_runs/campaign-d6f7926bba16/golden-gemma4_12b-think-off-e1d1f8d0f69f",
+      "passed": 3,
+      "total": 3,
+      "failure_categories": {},
+      "first_call_sec": 2.77,
+      "minutes": 0.9,
+      "settings": {
+        "constrained_schema": true,
+        "guided_progress": true,
+        "state_conditioned": true,
+        "grounded_quotes": true
+      }
+    }
+  ]
+}
